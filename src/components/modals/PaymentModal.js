@@ -29,17 +29,17 @@ const PaymentModal = ({ modalVisible, setModalVisible }) => {
                 <Text style={styles.dataText}>12:40-13:40</Text>
             </View>
 
-            <Image style={{ marginTop: 16, alignSelf: "center" }} source={require("../../../assets/images/qr.png")} />
-            <Image style={{ marginTop: 26.88, alignSelf: "center" }} source={require("../../../assets/images/barcode.png")} />
+            <Image style={styles.qr} source={require("../../../assets/images/qr.png")} />
+            <Image style={styles.barcode} source={require("../../../assets/images/barcode.png")} />
 
             <View style={styles.buttons}>
                 <TouchableOpacity activeOpacity={0.8} style={{ ...styles.button, backgroundColor: selectedTypeBg('apple') }} onPress={() => setPaymentType('apple')}>
-                    <Image style={{ marginRight: 2 }} source={require("../../../assets/images/icons/applePay.png")} />
+                    <Image source={require("../../../assets/images/icons/applePay.png")} />
                     <Text style={{ ...styles.buttonText, color: selectedTypeText('apple') }}>Pay</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity activeOpacity={0.8} style={{ ...styles.button, backgroundColor: selectedTypeBg('google') }} onPress={() => setPaymentType('google')}>
-                    <Image style={{ marginRight: 2 }} source={require("../../../assets/images/icons/googlePay.png")} />
+                    <Image source={require("../../../assets/images/icons/googlePay.png")} />
                     <Text style={{ ...styles.buttonText, color: selectedTypeText('google') }}>Pay</Text>
                 </TouchableOpacity>
 
@@ -78,6 +78,14 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         lineHeight: 17,
     },
+    qr: {
+        marginTop: 16,
+        alignSelf: "center"
+    },
+    barcode: {
+        marginTop: 26.88,
+        alignSelf: "center"
+    },
     buttons: {
         flexDirection: "row",
         justifyContent: "center",
@@ -92,6 +100,7 @@ const styles = StyleSheet.create({
         borderRadius: 18,
         paddingHorizontal: 18,
         paddingVertical: 13,
+        gap: 2
     },
     buttonText: {
         fontSize: 16,

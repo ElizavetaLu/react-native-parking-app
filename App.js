@@ -1,19 +1,20 @@
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
-import { createAppContainer } from 'react-navigation';
-import { Image } from 'react-native';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import CardsEmptyScreen from './src/screens/CardsEmptyScreen';
 import PaymentsScreen from './src/screens/PaymentsScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import StartScreen from './src/screens/StartScreen';
 import HomeScreen from './src/screens/HomeScreen';
+import { Image } from 'react-native';
 
 const isUserLogged = false;
 const cardsExist = true;
 
 
+
 const navigator = createMaterialBottomTabNavigator({
   Home: {
-    screen: isUserLogged ? HomeScreen : StartScreen,
+    screen: HomeScreen,
     navigationOptions: {
       tabBarIcon: () => <Image source={require("./assets/images/icons/home.png")} />
     }
@@ -38,4 +39,11 @@ const navigator = createMaterialBottomTabNavigator({
   }
 })
 
-export default createAppContainer(navigator);
+
+const switchNavigator = createSwitchNavigator({
+  Signup: StartScreen,
+  navigator
+});
+
+
+export default createAppContainer(switchNavigator);

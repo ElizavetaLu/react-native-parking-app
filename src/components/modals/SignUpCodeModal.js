@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TextInput } from "react-native";
 import { useRef, useState } from "react";
 import ModalContainer from "./ModalContainer";
 
-const SignUpCodeModal = ({navigate, modalVisible, setModalVisible }) => {
+const SignUpCodeModal = ({ navigate, modalVisible, setModalVisible }) => {
 
     const [onFocuse, setOnFocuse] = useState(1);
 
@@ -49,6 +49,7 @@ const SignUpCodeModal = ({navigate, modalVisible, setModalVisible }) => {
 
                     value={input1Value}
                     onChangeText={val => {
+                        if (isNaN(val)) return
                         input2.current.focus();
                         setOnFocuse(2);
                         setInput1Value(val)
@@ -61,6 +62,7 @@ const SignUpCodeModal = ({navigate, modalVisible, setModalVisible }) => {
 
                     value={input2Value}
                     onChangeText={val => {
+                        if (isNaN(val)) return
                         input3.current.focus();
                         setOnFocuse(3);
                         setInput2Value(val)
@@ -73,6 +75,7 @@ const SignUpCodeModal = ({navigate, modalVisible, setModalVisible }) => {
 
                     value={input3Value}
                     onChangeText={val => {
+                        if (isNaN(val)) return
                         input4.current.focus();
                         setOnFocuse(4);
                         setInput3Value(val)
@@ -84,7 +87,10 @@ const SignUpCodeModal = ({navigate, modalVisible, setModalVisible }) => {
                     ref={input4}
 
                     value={input4Value}
-                    onChangeText={setInput4Value}
+                    onChangeText={val => {
+                        if (isNaN(val)) return
+                        setInput4Value(val)
+                    }}
                 />
             </View>
 

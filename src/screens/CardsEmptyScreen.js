@@ -1,8 +1,8 @@
 import { ImageBackground, View, StyleSheet, Text, Image } from "react-native";
-import { useState } from "react";
-import Button from "../components/buttons/Button";
 import NewCardModal from "../components/modals/NewCardModal";
+import Button from "../components/buttons/Button";
 import Header from "../components/Header";
+import { useState } from "react";
 
 const CardsEmptyScreen = ({ navigation }) => {
 

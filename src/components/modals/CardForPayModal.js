@@ -1,20 +1,15 @@
 import { View, Text, Image, StyleSheet } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import CardDataInputs from "../CardDataInputs";
 import ModalContainer from "./ModalContainer";
 import { useState } from "react";
-import Input from "../Input";
 
 const CardForPayModal = ({ modalVisible, setModalVisible }) => {
-
-    const [cardholder, setCardholder] = useState('');
-    const [cardNumber, setCardNumber] = useState('');
-    const [expDate, setExpDate] = useState('');
-    const [cvv, setCvv] = useState('');
 
     const [checked, setChecked] = useState(false);
 
     const onPay = () => {
-        // on Pay press code
+        // onPay press code
 
 
         // save card data
@@ -39,27 +34,15 @@ const CardForPayModal = ({ modalVisible, setModalVisible }) => {
                 <Text style={styles.dataText}>12:40-13:40</Text>
             </View>
 
-            <View style={styles.inputsContainer}>
-                <Input value={cardholder} onChange={setCardholder} label="Cardholder Name" />
-                <Input value={cardNumber} onChange={setCardNumber} label="Card Number" maxLength={16}/>
-
-                <View style={styles.inputsRow}>
-
-                    <View style={{ flexGrow: 3 }}>
-                        <Input value={expDate} onChange={setExpDate} label="Expire Date" maxLength={5} />
-                    </View>
-                    <Input value={cvv} onChange={setCvv} label="CVV" isPassword maxLength={3} />
-
-                </View>
-            </View>
+            <CardDataInputs />
 
             <BouncyCheckbox
                 size={13}
                 fillColor="#4FA4FB"
                 unfillColor="#FFFFFF"
                 text="Save my details for future purchases"
-                iconStyle={{ borderColor: "#4FA4FB" }}
-                innerIconStyle={{ borderWidth: 1, borderRadius: 4 }}
+                iconStyle={styles.iconStyle}
+                innerIconStyle={styles.innerIconStyle}
                 textStyle={styles.checkboxText}
 
                 isChecked={checked}
@@ -90,7 +73,8 @@ const styles = StyleSheet.create({
     data: {
         flexDirection: "row",
         gap: 28,
-        marginLeft: 28
+        marginLeft: 28,
+        marginBottom: 20,
     },
     dataText: {
         color: "#8F8F8F",
@@ -98,21 +82,19 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         lineHeight: 17,
     },
-    inputsContainer: {
-        gap: 16,
-        marginTop: 20,
-        marginBottom: 12,
+    iconStyle: {
+        borderColor: "#4FA4FB"
     },
-    inputsRow: {
-        flexDirection: "row",
-        gap: 13
+    innerIconStyle: {
+        borderWidth: 1,
+        borderRadius: 4
     },
     checkboxText: {
         fontSize: 10,
         fontWeight: '400',
         lineHeight: 14,
         color: "#333333",
-        textDecorationLine: "none"
+        textDecorationLine: "none",
     },
     total: {
         flexDirection: "row",
