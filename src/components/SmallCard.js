@@ -1,6 +1,6 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native"
+import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 
-const SmallCard = ({ blocked, cardNumber, expDate }) => {
+const SmallCard = ({ blocked, cardNumber, expDate, action }) => {
 
     const hiddenCardNumber = "**** **** **** " + cardNumber.slice(-4)
 
@@ -22,7 +22,7 @@ const SmallCard = ({ blocked, cardNumber, expDate }) => {
             <View style={styles.deleteContainer}>
                 <Image source={require("../../assets/images/icons/mini-card.png")} />
 
-                <TouchableOpacity activeOpacity={0.8} style={styles.button}>
+                <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={action}>
                     <Text style={styles.buttonText}>Delete</Text>
                 </TouchableOpacity>
             </View>

@@ -1,4 +1,4 @@
-import { SafeAreaView, View, StyleSheet } from "react-native"
+import { SafeAreaView, View, StyleSheet } from "react-native";
 
 const RoundedContainer = ({ children }) => {
     return (

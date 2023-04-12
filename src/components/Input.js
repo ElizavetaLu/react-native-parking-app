@@ -1,10 +1,13 @@
-import { StyleSheet } from "react-native";
 import { FloatingLabelInput } from 'react-native-floating-label-input';
+import { StyleSheet } from "react-native";
 
 
 const Input = ({ value, onChange, label, isPassword, maxLength }) => {
+
     return (
         <FloatingLabelInput
+            autoCapitalize="none"
+            autoCorrect={false}
             isPassword={isPassword}
             maxLength={maxLength}
             label={label}
@@ -22,9 +25,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#E8E8E8",
         borderRadius: 30,
-        paddingTop: 15,
-        paddingBottom: 16,
-        paddingLeft: 24
+        paddingVertical: 10,
+        paddingLeft: 24,
+        height: 44
     },
     input: {
         fontSize: 12,

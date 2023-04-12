@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { FlatList, Image, StyleSheet, View } from "react-native";
+import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignUpPhoneModal from "../components/modals/SignUpPhoneModal";
 import SignUpCodeModal from "../components/modals/SignUpCodeModal";
 import RoundedContainer from "../components/RoundedContainer";
+import { useCallback, useEffect, useState } from "react";
 import Button from "../components/buttons/Button";
 import SmallCard from "../components/SmallCard";
 import Header from "../components/Header";
@@ -10,12 +11,6 @@ import Input from "../components/Input";
 
 
 const isUserLogged = true;
-const cardsList = [
-    { blocked: false, cardNumber: '1234567891011121', expDate: '12/24', id: 0 },
-    { blocked: true, cardNumber: '1234567891016544', expDate: '12/25', id: 1 },
-    { blocked: false, cardNumber: '1234567891018765', expDate: '11/26', id: 2 },
-    { blocked: true, cardNumber: '1234567891013456', expDate: '10/24', id: 3 },
-]
 
 const ProfileScreen = () => {
 
@@ -26,9 +21,49 @@ const ProfileScreen = () => {
     const [phoneModal, setPhoneModal] = useState(false);
     const [codeModal, setCodeModal] = useState(false);
 
+    const [cards, setCards] = useState([]);
+
+    const getCards = useCallback(
+        async () => {
+            try {
+                const cards = await AsyncStorage.getItem("cards");
+
+                if (cards) {
+                    const cardsArr = JSON.parse(cards);
+                    setCards(cardsArr);
+                }
+
+            } catch (error) {
+                await AsyncStorage.removeItem("cards");
+            }
+        },
+        [cards]
+    );
+
+    // useEffect(() => {
+    //     getCards();
+    // }, [cards])
+
+    const onDelete = async (id) => {
+        try {
+            const cards = await AsyncStorage.getItem("cards");
+
+            if (cards) {
+                const cardsArr = JSON.parse(cards);
+                const newArr = cardsArr.filter(item => item.id !== id);
+
+                await AsyncStorage.setItem("cards", JSON.stringify(newArr));
+                setCards(newArr);
+            }
+
+        } catch (error) {
+            await AsyncStorage.removeItem("cards");
+        }
+    }
+
     return (
         <RoundedContainer>
-            <View style={{ flex: 1, marginBottom: 25, paddingHorizontal: 16 }}>
+            <View style={styles.container}>
 
                 <Header title="my profile" />
 
@@ -36,7 +71,7 @@ const ProfileScreen = () => {
                 <SignUpCodeModal modalVisible={codeModal} setModalVisible={setCodeModal} />
 
 
-                <View style={{ flex: 1 }}>
+                <View style={styles.profile}>
                     {isUserLogged
                         ? <>
                             <View style={styles.avatarContainer}>
@@ -47,30 +82,34 @@ const ProfileScreen = () => {
                             </View>
                             <View style={styles.inputsContainer}>
                                 <Input value={name} onChange={setName} label="Name" />
-                                <Input value={phone} onChange={setPhone} label="Phone Number" />
+                                <Input value={phone} onChange={setPhone} label="Phone Number" maxLength={15} />
                                 <Input value={email} onChange={setEmail} label="Email" />
                             </View>
                         </>
-                        : < View style={{ flex: 1, justifyContent: "center" }}>
+                        : < View style={styles.buttonContainer}>
                             <Button text="sign up" onPress={() => setPhoneModal(true)} primary />
                         </View >
                     }
 
-                    <View style={{ flex: 1 }}>
+                    <View style={styles.cards}>
 
                         <Header title="my cards" />
 
+
+                        {cards.length < 1 && <Text style={styles.dump}>You have no added cards</Text>}
+
                         <FlatList
-                            style={{ top: -21 }}
-                            data={cardsList}
+                            style={styles.list}
+                            data={cards}
                             keyExtractor={item => item.id}
-                            ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+                            ItemSeparatorComponent={() => <View style={styles.separator} />}
                             renderItem={({ item }) => {
                                 return (
                                     <SmallCard
                                         blocked={item.blocked}
                                         cardNumber={item.cardNumber}
                                         expDate={item.expDate}
+                                        action={() => onDelete(item.id)}
                                     />
                                 )
                             }}
@@ -85,6 +124,18 @@ const ProfileScreen = () => {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        marginBottom: 25,
+        paddingHorizontal: 16
+    },
+    profile: {
+        flex: 1
+    },
+    buttonContainer: {
+        flex: 1,
+        justifyContent: "center"
+    },
     avatarContainer: {
         position: "relative",
         alignSelf: "center",
@@ -102,6 +153,20 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 32,
         gap: 16
+    },
+    cards: {
+        flex: 1
+    },
+    list: {
+        top: -21
+    },
+    separator: {
+        height: 12
+    },
+    dump: {
+        color: "#8F8F8F",
+        fontSize: 12,
+        fontWeight: 400
     }
 })
 

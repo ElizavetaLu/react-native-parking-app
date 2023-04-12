@@ -28,9 +28,9 @@ const SignUpPhoneModal = ({ modalVisible, setModalVisible, openNextModal }) => {
             <Text style={styles.title}>Sign Up</Text>
             <Text style={styles.text}>Please enter your Phone number</Text>
 
-            <Input value={number} onChange={setNumber} label="Phone Number" />
+            <Input value={number} onChange={setNumber} label="Phone Number" maxLength={15} />
 
-            <View style={{ marginBottom: 17 }}></View>
+            <View style={styles.separator}></View>
         </ModalContainer>
     )
 }
@@ -52,6 +52,9 @@ const styles = StyleSheet.create({
         lineHeight: 16.8,
         color: "#333333",
         marginBottom: 24
+    },
+    separator: {
+        marginBottom: 17
     }
 })
 
