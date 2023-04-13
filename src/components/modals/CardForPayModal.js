@@ -1,19 +1,74 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { cardNumberFormat, expDateFormat } from "../../helpersFunc";
 import { View, Text, Image, StyleSheet } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import CardDataInputs from "../CardDataInputs";
 import ModalContainer from "./ModalContainer";
+import uuid from 'react-native-uuid';
+import valid from "card-validator";
 import { useState } from "react";
 
 const CardForPayModal = ({ modalVisible, setModalVisible }) => {
 
+    const [cardholder, setCardholder] = useState('');
+    const [cardNumber, setCardNumber] = useState('');
+    const [expDate, setExpDate] = useState('');
+    const [cvv, setCvv] = useState('');
+
+    const [errorMessage, setErrorMessage] = useState('');
+
     const [checked, setChecked] = useState(false);
 
-    const onPay = () => {
-        // onPay press code
+    const onPay = async () => {
+
+        if (!valid.cardholderName(cardholder).isValid) return setErrorMessage('invalid cardholder name');
+        if (!valid.number(cardNumber).isValid) return setErrorMessage('invalid card number');
+        if (!valid.expirationDate(expDate).isValid) return setErrorMessage('invalid expiration date');
+        if (!valid.cvv(cvv).isValid) return setErrorMessage('invalid CVV');
+
+        if (checked) {
+            const card = {
+                blocked: false,
+                cardholder,
+                cardNumber,
+                expDate,
+                cvv,
+                id: uuid.v4()
+            };
+
+            try {
+                const cardsList = await AsyncStorage.getItem("cards");
+
+                if (!cardsList) {
+
+                    const cardsArrToString = JSON.stringify([card]);
+                    await AsyncStorage.setItem("cards", cardsArrToString);
+
+                    setModalVisible(false);
+
+                } else {
+
+                    const cardsArr = JSON.parse(cardsList);
+
+                    const newCardsArrToString = JSON.stringify([...cardsArr, card]);
+                    await AsyncStorage.setItem("cards", newCardsArrToString);
+
+                    setModalVisible(false);
+                }
+
+            } catch (error) {
+                await AsyncStorage.removeItem("cards");
+            }
+        }
+
+        // payment code
 
 
-        // save card data
-        if (checked) { }
+        //clean up inputs
+        setCardholder('')
+        setCardNumber('')
+        setExpDate('')
+        setCvv('')
     }
 
     return (
@@ -34,7 +89,13 @@ const CardForPayModal = ({ modalVisible, setModalVisible }) => {
                 <Text style={styles.dataText}>12:40-13:40</Text>
             </View>
 
-            <CardDataInputs />
+            <Text style={styles.error}>{errorMessage}</Text>
+            <CardDataInputs
+                cardholder={cardholder} setCardholder={(value) => setCardholder(value.toUpperCase())}
+                cardNumber={cardNumber} setCardNumber={value => cardNumberFormat(value, setCardNumber)}
+                expDate={expDate} setExpDate={value => expDateFormat(value, setExpDate)}
+                cvv={cvv} setCvv={setCvv}
+            />
 
             <BouncyCheckbox
                 size={13}
@@ -74,13 +135,21 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: 28,
         marginLeft: 28,
-        marginBottom: 20,
+        // marginBottom: 20,
     },
     dataText: {
         color: "#8F8F8F",
         fontSize: 12,
         fontWeight: '400',
         lineHeight: 17,
+    },
+    error: {
+        textAlign: "center",
+        textTransform: "capitalize",
+        fontSize: 15,
+        fontWeight: 600,
+        color: "#FC3C3C",
+        paddingVertical: 5
     },
     iconStyle: {
         borderColor: "#4FA4FB"

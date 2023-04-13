@@ -1,11 +1,12 @@
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, ImageBackground } from "react-native";
 
 const Card = ({ blocked, cardNumber, expDate }) => {
 
-const hiddenCardNumber = "**** **** **** " + cardNumber.slice(-4)
+    const hiddenCardNumber = "**** **** **** " + cardNumber?.slice(-4)
 
     return (
-        <View style={styles.container}>
+        <ImageBackground style={styles.container} source={require('../../assets/images/backgrounds/cardDark.png')}>
+
             <View style={styles.header}>
                 <View></View>
                 <Image source={require("../../assets/images/icons/chip.png")} />
@@ -23,7 +24,7 @@ const hiddenCardNumber = "**** **** **** " + cardNumber.slice(-4)
                     <Text style={styles.cardExpData}>{expDate}</Text>
                 </View>
             </View>
-        </View>
+        </ImageBackground>
     )
 }
 
@@ -35,7 +36,6 @@ const styles = StyleSheet.create({
         width: 230,
         height: 283,
         borderRadius: 30.65,
-        backgroundColor: "#333333",
         justifyContent: "space-between"
     },
     header: {

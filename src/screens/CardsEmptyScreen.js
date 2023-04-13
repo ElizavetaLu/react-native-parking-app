@@ -11,13 +11,13 @@ const CardsEmptyScreen = ({ navigation }) => {
     return (
         <View style={styles.darkBackground}>
             <View style={styles.lightArea}>
-                <ImageBackground source={require("../../assets/images/paymentBG.png")} resizeMode="cover" style={styles.backgroundImage}>
-                    <NewCardModal modalVisible={modalVisible} setModalVisible={setModalVisible} navigate={navigation.navigate} />
+                <ImageBackground source={require("../../assets/images/backgrounds/paymentBG.png")} resizeMode="cover" style={styles.backgroundImage}>
+                    <NewCardModal modalVisible={modalVisible} setModalVisible={setModalVisible} navigate={()=>navigation.navigate("Payments")} />
 
                     <Header title="my cards" />
 
                     <Text style={styles.title}>You have no added cards</Text>
-                    <Image style={styles.image} source={require("../../assets/images/halfCard.png")} />
+                    <Image style={styles.image} source={require("../../assets/images/creditCard.png")} />
                     <Button text="add card" onPress={() => setModalVisible(true)} primary />
                 </ImageBackground>
             </View>
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     },
     image: {
         position: "absolute",
-        right: 0,
+        right: -120,
         top: "60%",
     },
     title: {

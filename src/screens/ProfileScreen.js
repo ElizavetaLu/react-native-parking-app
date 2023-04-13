@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignUpPhoneModal from "../components/modals/SignUpPhoneModal";
 import SignUpCodeModal from "../components/modals/SignUpCodeModal";
 import RoundedContainer from "../components/RoundedContainer";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../components/buttons/Button";
 import SmallCard from "../components/SmallCard";
 import Header from "../components/Header";
@@ -23,37 +23,30 @@ const ProfileScreen = () => {
 
     const [cards, setCards] = useState([]);
 
-    const getCards = useCallback(
-        async () => {
-            try {
-                const cards = await AsyncStorage.getItem("cards");
-
-                if (cards) {
-                    const cardsArr = JSON.parse(cards);
+    useEffect(() => {
+        AsyncStorage.getItem("cards")
+            .then(res => {
+                if (res) {
+                    const cardsArr = JSON.parse(res);
                     setCards(cardsArr);
                 }
+            })
+            .catch(error => AsyncStorage.removeItem("cards"))
 
-            } catch (error) {
-                await AsyncStorage.removeItem("cards");
-            }
-        },
-        [cards]
-    );
-
-    // useEffect(() => {
-    //     getCards();
-    // }, [cards])
+    }, [])
+    console.log('pipka')
+    console.log(cards)
 
     const onDelete = async (id) => {
         try {
-            const cards = await AsyncStorage.getItem("cards");
+            const cardsList = await AsyncStorage.getItem("cards");
 
-            if (cards) {
-                const cardsArr = JSON.parse(cards);
-                const newArr = cardsArr.filter(item => item.id !== id);
+            if (cardsList) {
+                const cardsArr = JSON.parse(cardsList);
+                const newCardsArr = cardsArr.filter(item => item.id !== id);
 
-                await AsyncStorage.setItem("cards", JSON.stringify(newArr));
-                setCards(newArr);
+                await AsyncStorage.setItem("cards", JSON.stringify(newCardsArr));
+                setCards(newCardsArr);
             }
 
         } catch (error) {
@@ -69,7 +62,6 @@ const ProfileScreen = () => {
 
                 <SignUpPhoneModal modalVisible={phoneModal} setModalVisible={setPhoneModal} openNextModal={setCodeModal} />
                 <SignUpCodeModal modalVisible={codeModal} setModalVisible={setCodeModal} />
-
 
                 <View style={styles.profile}>
                     {isUserLogged
@@ -114,7 +106,9 @@ const ProfileScreen = () => {
                                 )
                             }}
                         />
-                        <Button text="Delete Profile" onPress={() => { }} primary />
+                        <View style={styles.buttonContainer}>
+                            <Button text="Delete Profile" onPress={() => { }} primary />
+                        </View>
                     </View>
 
                 </View>
@@ -126,7 +120,6 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginBottom: 25,
         paddingHorizontal: 16
     },
     profile: {
@@ -167,6 +160,17 @@ const styles = StyleSheet.create({
         color: "#8F8F8F",
         fontSize: 12,
         fontWeight: 400
+    },
+    buttonContainer: {
+        position: "absolute",
+        bottom: 0,
+        right: 0,
+        left: 0,
+        height: 121,
+        backgroundColor: "rgba(255, 255, 255, 0.48)",
+        justifyContent: "center",
+        borderBottomEndRadius: 32,
+        borderBottomStartRadius: 32,
     }
 })
 

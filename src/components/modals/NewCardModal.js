@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { cardNumberFormat, expDateFormat } from '../../helpersFunc';
 import { Text, StyleSheet } from "react-native";
 import CardDataInputs from "../CardDataInputs";
 import ModalContainer from "./ModalContainer";
@@ -7,7 +8,7 @@ import valid from "card-validator";
 import { useState } from "react";
 
 
-const NewCardModal = ({setCards, modalVisible, setModalVisible }) => {
+const NewCardModal = ({ setCards, modalVisible, setModalVisible, navigate }) => {
 
     const [cardholder, setCardholder] = useState('');
     const [cardNumber, setCardNumber] = useState('');
@@ -19,7 +20,7 @@ const NewCardModal = ({setCards, modalVisible, setModalVisible }) => {
     const onAdd = async () => {
 
         if (!valid.cardholderName(cardholder).isValid) return setErrorMessage('invalid cardholder name');
-        if (!valid.number(cardNumber).isValid) return setErrorMessage('invalid card number');
+        // if (!valid.number(cardNumber).isValid) return setErrorMessage('invalid card number');
         if (!valid.expirationDate(expDate).isValid) return setErrorMessage('invalid expiration date');
         if (!valid.cvv(cvv).isValid) return setErrorMessage('invalid CVV');
 
@@ -42,7 +43,7 @@ const NewCardModal = ({setCards, modalVisible, setModalVisible }) => {
 
                 await AsyncStorage.setItem("cards", cardsArrToString);
 
-                setCards([card]);
+                if (setCards) setCards([card]);
                 setModalVisible(false);
 
 
@@ -53,7 +54,7 @@ const NewCardModal = ({setCards, modalVisible, setModalVisible }) => {
                 const cardsArrToString = JSON.stringify([...cardsArr, card]);
                 await AsyncStorage.setItem("cards", cardsArrToString);
 
-                setCards([...cardsArr, card]);
+                if (setCards) setCards([...cardsArr, card]);
                 setModalVisible(false);
 
             }
@@ -62,55 +63,14 @@ const NewCardModal = ({setCards, modalVisible, setModalVisible }) => {
             await AsyncStorage.removeItem("cards");
         }
 
-        cardholder('')
-        cardNumber('')
-        expDate('')
-        cvv('')
+        setCardholder('')
+        setCardNumber('')
+        setExpDate('')
+        setCvv('')
+
+
+        if (navigate) navigate()
     }
-
-
-    const cardNumberFormat = value => {
-
-        if (isNaN(value.split(' ').join(''))) return;
-
-        const v = value
-            .replace(/\s+/g, "")
-            .replace(/[^0-9]/gi, "")
-            .substr(0, 16);
-
-        const parts = [];
-
-        for (let i = 0; i < v.length; i += 4) {
-            parts.push(v.substr(i, 4));
-        }
-
-        setCardNumber(parts.length > 1 ? parts.join(" ") : value);
-    }
-
-
-    const formatExpDate = value => {
-
-        if (isNaN(value.split('/').join(''))) return;
-
-        const formattedValue = value.replace(
-            /^([1-9]\/|[2-9])$/g, '0$1/' // 3 > 03/
-        ).replace(
-            /^(0[1-9]|1[0-2])$/g, '$1/' // 11 > 11/
-        ).replace(
-            /^([0-1])([3-9])$/g, '0$1/$2' // 13 > 01/3
-        ).replace(
-            /^(0?[1-9]|1[0-2])([0-9]{2})$/g, '$1/$2' // 141 > 01/41
-        ).replace(
-            /^([0]+)\/|[0]+$/g, '0' // 0/ > 0 and 00 > 0
-        ).replace(
-            /[^\d\/]|^[\/]*$/g, '' // To allow only digits and `/`
-        ).replace(
-            /\/\//g, '/' // Prevent entering more than 1 `/`
-        );
-
-        setExpDate(formattedValue);
-    }
-
 
 
     return (
@@ -127,8 +87,8 @@ const NewCardModal = ({setCards, modalVisible, setModalVisible }) => {
 
             <CardDataInputs
                 cardholder={cardholder} setCardholder={(value) => setCardholder(value.toUpperCase())}
-                cardNumber={cardNumber} setCardNumber={value => cardNumberFormat(value)}
-                expDate={expDate} setExpDate={value => formatExpDate(value)}
+                cardNumber={cardNumber} setCardNumber={value => cardNumberFormat(value, setCardNumber)}
+                expDate={expDate} setExpDate={value => expDateFormat(value, setExpDate)}
                 cvv={cvv} setCvv={setCvv}
             />
 
