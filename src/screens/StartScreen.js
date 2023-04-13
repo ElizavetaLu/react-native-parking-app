@@ -1,24 +1,15 @@
 import { Text, View, TouchableOpacity, StyleSheet, ImageBackground } from "react-native";
-import SignUpPhoneModal from "../components/modals/SignUpPhoneModal";
-import SignUpCodeModal from "../components/modals/SignUpCodeModal";
 import { Ionicons } from '@expo/vector-icons';
-import { useState } from "react";
 
 
 const StartScreen = ({ navigation }) => {
 
-    const [phoneModal, setPhoneModal] = useState(false);
-    const [codeModal, setCodeModal] = useState(false);
-
     return (
-        <ImageBackground source={require("../../assets/images/mainBG.png")} resizeMode="cover" style={styles.image}>
+        <ImageBackground source={require("../../assets/images/backgrounds/mainBG.png")} resizeMode="cover" style={styles.image}>
             <View style={styles.container}>
                 <Text style={styles.title}>pay for parking directly in the app</Text>
 
-                <SignUpPhoneModal modalVisible={phoneModal} setModalVisible={setPhoneModal} openNextModal={setCodeModal} />
-                <SignUpCodeModal modalVisible={codeModal} setModalVisible={setCodeModal} navigate={() => navigation.navigate('Home')} />
-
-                <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={() => setPhoneModal(!phoneModal)}>
+                <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={() => navigation.navigate('Home')}>
                     <Text style={styles.buttonText}> Get Started</Text>
                     <Ionicons name="arrow-forward" size={24} color="white" />
                 </TouchableOpacity>

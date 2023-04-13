@@ -20,7 +20,7 @@ const navigator = createMaterialBottomTabNavigator({
     }
   },
   Payments: {
-    screen: cardsExist ? PaymentsScreen : CardsEmptyScreen,
+    screen: PaymentsScreen,
     navigationOptions: {
       tabBarIcon: () => <Image source={require("./assets/images/icons/cards.png")} />
     }
@@ -41,7 +41,7 @@ const navigator = createMaterialBottomTabNavigator({
 
 
 const switchNavigator = createSwitchNavigator({
-  Signup: StartScreen,
+  Signup: CardsEmptyScreen,
   navigator
 });
 
