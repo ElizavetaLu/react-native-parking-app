@@ -1,32 +1,58 @@
-import { Image, StyleSheet, View, SafeAreaView, Pressable, Animated } from "react-native";
+import { Dimensions, Image, StyleSheet, View, SafeAreaView, Pressable, Animated } from "react-native";
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import CardForPayModal from "../components/modals/CardForPayModal";
 import { requestForegroundPermissionsAsync } from "expo-location";
 import PaymentModal from "../components/modals/PaymentModal";
-import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import ErrorModal from "../components/modals/ErrorModal";
+import Carousel from 'react-native-reanimated-carousel';
 import { useEffect, useState } from "react";
-import Header from "../components/Header";
 import MapCard from "../components/MapCard";
 import mapDarkStyle from "../mapDarkStyle";
+import Header from "../components/Header";
 
-const markers = [
-    { latitude: 37.78825, longitude: -122.4324, address: "Lvivska Str. Parking Forum Lviv", distance: "400m from you" },
-    { latitude: 37.78735, longitude: -122.4344, address: "Lvivska Str. Parking Forum Lviv", distance: "500m from you" },
-    { latitude: 37.78945, longitude: -122.4324, address: "Lvivska Str. Parking Forum Lviv", distance: "600m from you" },
-    { latitude: 37.78655, longitude: -122.4334, address: "Lvivska Str. Parking Forum Lviv", distance: "700m from you" },
+
+
+const coordinates = [
+    { latitude: 49.842957, longitude: 24.031111, address: "Lvivska Str. Parking Forum Lviv 1", distance: "400m from you" },
+    { latitude: 49.844858, longitude: 24.031312, address: "Lvivska Str. Parking Forum Lviv 2", distance: "500m from you" },
+    { latitude: 49.845759, longitude: 24.031413, address: "Lvivska Str. Parking Forum Lviv 3", distance: "600m from you" },
+    { latitude: 49.846650, longitude: 24.031514, address: "Lvivska Str. Parking Forum Lviv 4", distance: "700m from you" },
 ]
 
 
 const HomeScreen = () => {
 
-
     const [paymentModal, setPaymentModal] = useState(false);
     const [cardDataModal, setCardDataModal] = useState(false);
+    const [errorModal, setErrorModal] = useState(false);
+
+    const width = Dimensions.get('window').width;
+
+    const [markers, setMarkers] = useState([]);
+    const [map, setMap] = useState(null);
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    const onCarouselItemChange = (index) => {
+        setActiveIndex(index)
+        let location = coordinates[index];
+
+        map.animateToRegion({
+            latitude: location.latitude,
+            longitude: location.longitude,
+            latitudeDelta: 0.00722,
+            longitudeDelta: 0.00321,
+        })
+
+        markers[index].showCallout()
+    }
+
 
     const test = async () => {
         const { granted } = await requestForegroundPermissionsAsync();
 
         if (!granted) {
             console.log("Location permission not granted");
+
         }
     }
 
@@ -38,8 +64,25 @@ const HomeScreen = () => {
         <SafeAreaView style={styles.container}>
             <Header title="scan your code" />
 
-            <PaymentModal modalVisible={paymentModal} setModalVisible={setPaymentModal} />
-            <CardForPayModal modalVisible={cardDataModal} setModalVisible={setCardDataModal} />
+            <PaymentModal
+                address="Lvivska Str. Parking Forum Lviv"
+                date="Jun 12, 2022"
+                time="12:40-13:40"
+                total="12"
+                modalVisible={paymentModal}
+                setModalVisible={setPaymentModal}
+                showNextModal={setCardDataModal}
+            />
+            <CardForPayModal
+                address="Lvivska Str. Parking Forum Lviv"
+                date="Jun 12, 2022"
+                time="12:40-13:40"
+                total="12"
+                modalVisible={cardDataModal}
+                setModalVisible={setCardDataModal}
+                setErrorModal={setErrorModal}
+            />
+            <ErrorModal modalVisible={errorModal} setModalVisible={setErrorModal} />
 
             <Pressable onPress={() => { }}>
                 <Image style={styles.image} source={require('../../assets/images/scanQR.png')} />
@@ -51,41 +94,53 @@ const HomeScreen = () => {
                         style={styles.map}
                         provider={PROVIDER_GOOGLE}
                         customMapStyle={mapDarkStyle}
-
+                        ref={map => setMap(map)}
                         initialRegion={{
-                            latitude: 37.78825,
-                            longitude: -122.4324,
-                            latitudeDelta: 0.06922,
-                            longitudeDelta: 0.06421,
+                            latitude: 49.842957,
+                            longitude: 24.031111,
+                            latitudeDelta: 0.00722,
+                            longitudeDelta: 0.00321,
                         }}
-
                     >
-                        {markers.map((marker, index) => {
+                        {coordinates.map((marker, index) => {
                             return (
                                 <Marker
                                     key={index}
+                                    ref={ref => markers[index] = ref}
                                     coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
                                 >
-                                    <Animated.Image source={require('../../assets/images/icons/mapMarker.png')} />
+                                    <Animated.Image
+                                        style={activeIndex === index && { width: 28.8, height: 34.45 }}
+                                        source={require('../../assets/images/icons/mapMarker.png')}
+                                    />
                                 </Marker>
                             );
                         })}
                     </MapView>
-                    <Animated.ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        style={styles.scrollView}
-                    >
-                        {markers.map((marker, index) => {
-                            return (
+                    <View style={styles.carouselContainer}>
+                        <Carousel
+                            loop
+                            mode="parallax"
+                            modeConfig={{
+                                parallaxScrollingScale: 0.9,
+                                parallaxScrollingOffset: 100,
+                            }}
+                            
+                            height={88}
+                            width={width}
+
+                            data={coordinates}
+                            renderItem={({ item, index }) => (
                                 < MapCard
-                                    key={index}
-                                    address={marker.address}
-                                    distance={marker.distance}
+                                    key={item.id}
+                                    active={index === activeIndex}
+                                    address={item.address}
+                                    distance={item.distance}
                                 />
-                            )
-                        })}
-                    </Animated.ScrollView>
+                            )}
+                            onSnapToItem={onCarouselItemChange}
+                        />
+                    </View>
                 </View>
             </View>
 
@@ -115,7 +170,7 @@ const styles = StyleSheet.create({
         borderRadius: 32,
         overflow: "hidden",
     },
-    scrollView: {
+    carouselContainer: {
         position: "absolute",
         bottom: 30,
         left: 0,

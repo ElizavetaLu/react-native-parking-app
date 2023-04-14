@@ -2,7 +2,7 @@ import { StyleSheet, View, Text, Image, ImageBackground } from "react-native";
 
 const Card = ({ blocked, cardNumber, expDate }) => {
 
-    const hiddenCardNumber = "**** **** **** " + cardNumber?.slice(-4)
+    const hiddenCardNumber = "**** **** **** " + cardNumber?.slice(-4);
 
     return (
         <ImageBackground style={styles.container} source={require('../../assets/images/backgrounds/cardDark.png')}>

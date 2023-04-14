@@ -8,7 +8,7 @@ import uuid from 'react-native-uuid';
 import valid from "card-validator";
 import { useState } from "react";
 
-const CardForPayModal = ({ modalVisible, setModalVisible }) => {
+const CardForPayModal = ({ address, date, time, total, modalVisible, setModalVisible, setErrorModal }) => {
 
     const [cardholder, setCardholder] = useState('');
     const [cardNumber, setCardNumber] = useState('');
@@ -19,13 +19,15 @@ const CardForPayModal = ({ modalVisible, setModalVisible }) => {
 
     const [checked, setChecked] = useState(false);
 
+
     const onPay = async () => {
 
         if (!valid.cardholderName(cardholder).isValid) return setErrorMessage('invalid cardholder name');
-        if (!valid.number(cardNumber).isValid) return setErrorMessage('invalid card number');
+        // if (!valid.number(cardNumber).isValid) return setErrorMessage('invalid card number');
         if (!valid.expirationDate(expDate).isValid) return setErrorMessage('invalid expiration date');
         if (!valid.cvv(cvv).isValid) return setErrorMessage('invalid CVV');
 
+        // save card data if checked
         if (checked) {
             const card = {
                 blocked: false,
@@ -44,8 +46,6 @@ const CardForPayModal = ({ modalVisible, setModalVisible }) => {
                     const cardsArrToString = JSON.stringify([card]);
                     await AsyncStorage.setItem("cards", cardsArrToString);
 
-                    setModalVisible(false);
-
                 } else {
 
                     const cardsArr = JSON.parse(cardsList);
@@ -53,7 +53,6 @@ const CardForPayModal = ({ modalVisible, setModalVisible }) => {
                     const newCardsArrToString = JSON.stringify([...cardsArr, card]);
                     await AsyncStorage.setItem("cards", newCardsArrToString);
 
-                    setModalVisible(false);
                 }
 
             } catch (error) {
@@ -63,6 +62,44 @@ const CardForPayModal = ({ modalVisible, setModalVisible }) => {
 
         // payment code
 
+
+
+        // if payment  declined
+        if (false) {
+            setModalVisible(!modalVisible)
+            return setErrorModal(true)
+        }
+
+        // if payment succeeded save payment info
+        const paymentData = {
+            address,
+            date,
+            time,
+            total,
+            id: uuid.v4()
+        };
+
+        try {
+            const paymentsList = await AsyncStorage.getItem("payments");
+
+            if (!paymentsList) {
+
+                const paymentsArrToString = JSON.stringify([paymentData]);
+                await AsyncStorage.setItem("payments", paymentsArrToString);
+
+            } else {
+
+                const paymentsArr = JSON.parse(paymentsList);
+
+                const newPaymentsArrToString = JSON.stringify([...paymentsArr, paymentData]);
+                await AsyncStorage.setItem("payments", newPaymentsArrToString);
+            }
+
+        } catch (error) {
+            await AsyncStorage.removeItem("payments");
+        }
+
+        setModalVisible(!modalVisible);
 
         //clean up inputs
         setCardholder('')
@@ -81,17 +118,17 @@ const CardForPayModal = ({ modalVisible, setModalVisible }) => {
         >
             <View style={styles.address}>
                 <Image source={require("../../../assets/images/icons/locationDark.png")} />
-                <Text style={styles.addressText}>Lvivska Str. Parking Forum Lviv</Text>
+                <Text style={styles.addressText}>{address}</Text>
             </View>
 
             <View style={styles.data}>
-                <Text style={styles.dataText}>Jun 12, 2022</Text>
-                <Text style={styles.dataText}>12:40-13:40</Text>
+                <Text style={styles.dataText}>{date}</Text>
+                <Text style={styles.dataText}>{time}</Text>
             </View>
 
             <Text style={styles.error}>{errorMessage}</Text>
             <CardDataInputs
-                cardholder={cardholder} setCardholder={(value) => setCardholder(value.toUpperCase())}
+                cardholder={cardholder} setCardholder={value => setCardholder(value.toUpperCase())}
                 cardNumber={cardNumber} setCardNumber={value => cardNumberFormat(value, setCardNumber)}
                 expDate={expDate} setExpDate={value => expDateFormat(value, setExpDate)}
                 cvv={cvv} setCvv={setCvv}
@@ -112,7 +149,7 @@ const CardForPayModal = ({ modalVisible, setModalVisible }) => {
 
             <View style={styles.total}>
                 <Text style={styles.totalText}>Total amount</Text>
-                <Text style={styles.totalAmount}>12$</Text>
+                <Text style={styles.totalAmount}>{total}$</Text>
             </View>
         </ModalContainer>
     )

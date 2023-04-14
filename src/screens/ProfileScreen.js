@@ -34,8 +34,7 @@ const ProfileScreen = () => {
             .catch(error => AsyncStorage.removeItem("cards"))
 
     }, [])
-    console.log('pipka')
-    console.log(cards)
+    
 
     const onDelete = async (id) => {
         try {

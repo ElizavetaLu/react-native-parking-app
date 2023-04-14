@@ -2,14 +2,25 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import ModalContainer from "./ModalContainer";
 import { useState } from "react";
 
-const PaymentModal = ({ modalVisible, setModalVisible }) => {
+const PaymentModal = ({ address, date, time, total, modalVisible, setModalVisible, showNextModal }) => {
 
-    const [paymentType, setPaymentType] = useState('');
+    const [paymentType, setPaymentType] = useState('card');
     const selectedTypeBg = type => paymentType === type ? "#333" : "#fff";
     const selectedTypeText = type => paymentType === type ? "#fff" : "#333";
 
 
-    const onNext = () => { }
+    const onNext = () => {
+
+        if (paymentType === 'card') {
+
+            setModalVisible(!modalVisible);
+            showNextModal(true);
+        } else {
+
+            //pay by apple/google
+            setModalVisible(!modalVisible);
+        }
+    }
 
     return (
         <ModalContainer
@@ -21,12 +32,12 @@ const PaymentModal = ({ modalVisible, setModalVisible }) => {
         >
             <View style={styles.address}>
                 <Image source={require("../../../assets/images/icons/locationDark.png")} />
-                <Text style={styles.addressText}>Lvivska Str. Parking Forum Lviv</Text>
+                <Text style={styles.addressText}>{address}</Text>
             </View>
 
             <View style={styles.data}>
-                <Text style={styles.dataText}>Jun 12, 2022</Text>
-                <Text style={styles.dataText}>12:40-13:40</Text>
+                <Text style={styles.dataText}>{date}</Text>
+                <Text style={styles.dataText}>{time}</Text>
             </View>
 
             <Image style={styles.qr} source={require("../../../assets/images/qr.png")} />
@@ -50,7 +61,7 @@ const PaymentModal = ({ modalVisible, setModalVisible }) => {
 
             <View style={styles.total}>
                 <Text style={styles.totalText}>Total amount</Text>
-                <Text style={styles.totalAmount}>12$</Text>
+                <Text style={styles.totalAmount}>{total}$</Text>
             </View>
         </ModalContainer>
     )

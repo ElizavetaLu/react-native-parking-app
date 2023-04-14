@@ -1,12 +1,14 @@
 import { View, Image, Text, StyleSheet } from "react-native";
 
-const MapCard = ({ address, distance }) => {
+const MapCard = ({ active, address, distance }) => {
+
 
     return (
         <View style={styles.card}>
-            {/* <Image
-                style={{ position: "absolute", top: -6, right: -6 }}
-                source={require("../../assets/images/icons/selected.png")} /> */}
+            {active && <Image
+                style={styles.icon}
+                source={require("../../assets/images/icons/selected.png")}
+            />}
             <View style={styles.locationRow}>
                 <Image style={styles.locationIcon} source={require('../../assets/images/icons/location.png')} />
                 <Text style={{ fontSize: 14, fontWeight: 500, lineHeight: 19.6, color: "#fff" }}>{address}</Text>
@@ -17,15 +19,23 @@ const MapCard = ({ address, distance }) => {
 }
 
 const styles = StyleSheet.create({
+    icon: {
+        position: "absolute", 
+        top: -6,
+        right: -6
+    },
+
     card: {
         borderWidth: 1,
         borderColor: "#A7A7A7",
-        backgroundColor: "#3e3e3e",
-        opacity: 0.8,
+        backgroundColor: "#353535",
+        opacity: 0.9,
         paddingVertical: 20,
         paddingHorizontal: 16,
         marginHorizontal: 10,
-        borderRadius: 28
+        borderRadius: 28,
+        height: 82,
+        width: 340
     },
     locationRow: {
         flexDirection: "row",
