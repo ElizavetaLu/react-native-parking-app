@@ -2,7 +2,6 @@ import { View, Image, Text, StyleSheet } from "react-native";
 
 const MapCard = ({ active, address, distance }) => {
 
-
     return (
         <View style={styles.card}>
             {active && <Image
@@ -24,7 +23,6 @@ const styles = StyleSheet.create({
         top: -6,
         right: -6
     },
-
     card: {
         borderWidth: 1,
         borderColor: "#A7A7A7",
@@ -55,7 +53,6 @@ const styles = StyleSheet.create({
         lineHeight: 16.8,
         color: "#A7A7A7"
     }
-
 })
 
 export default MapCard

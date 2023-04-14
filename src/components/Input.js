@@ -1,6 +1,6 @@
 import { FloatingLabelInput } from 'react-native-floating-label-input';
+import { AntDesign } from '@expo/vector-icons';
 import { StyleSheet } from "react-native";
-
 
 const Input = ({ value, onChange, label, isPassword, maxLength }) => {
 
@@ -8,7 +8,11 @@ const Input = ({ value, onChange, label, isPassword, maxLength }) => {
         <FloatingLabelInput
             autoCapitalize="none"
             autoCorrect={false}
+
             isPassword={isPassword}
+            customShowPasswordComponent={<AntDesign name="eyeo" size={20} color="black" style={styles.eyeIcon} />}
+            customHidePasswordComponent={<AntDesign name="eye" size={20} color="black" style={styles.eyeIcon} />}
+
             maxLength={maxLength}
             label={label}
             containerStyles={styles.inputContainer}
@@ -34,6 +38,9 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         lineHeight: 17,
         color: "#333333"
+    },
+    eyeIcon: {
+        marginRight: 10
     }
 })
 

@@ -2,7 +2,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 
 const SmallCard = ({ blocked, cardNumber, expDate, action }) => {
 
-    const hiddenCardNumber = "**** **** **** " + cardNumber.slice(-4)
+    const hiddenCardNumber = "**** **** **** " + cardNumber.slice(-4);
 
     return (
         <View style={styles.container}>
