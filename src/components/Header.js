@@ -1,9 +1,6 @@
 import { StyleSheet, Text } from "react-native";
 
-const Header = ({ title }) => {
-
-    return <Text style={styles.header}>  {title}  </Text>
-}
+const Header = ({ title }) => <Text style={styles.header}>  {title}  </Text>;
 
 const styles = StyleSheet.create({
     header: {
@@ -16,6 +13,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         color: "#333333"
     }
-})
+});
 
 export default Header

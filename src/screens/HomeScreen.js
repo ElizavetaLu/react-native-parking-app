@@ -33,7 +33,8 @@ const HomeScreen = () => {
     const [activeIndex, setActiveIndex] = useState(0);
 
     const onCarouselItemChange = (index) => {
-        setActiveIndex(index)
+
+        setActiveIndex(index);
         let location = coordinates[index];
 
         map.animateToRegion({
@@ -41,23 +42,22 @@ const HomeScreen = () => {
             longitude: location.longitude,
             latitudeDelta: 0.00722,
             longitudeDelta: 0.00321,
-        })
+        });
 
-        markers[index].showCallout()
+        markers[index].showCallout();
     }
 
 
-    const test = async () => {
+    const askLocationPermission = async () => {
         const { granted } = await requestForegroundPermissionsAsync();
 
         if (!granted) {
             console.log("Location permission not granted");
-
         }
     }
 
     useEffect(() => {
-        test()
+        askLocationPermission();
     }, [])
 
     return (
@@ -125,7 +125,7 @@ const HomeScreen = () => {
                                 parallaxScrollingScale: 0.9,
                                 parallaxScrollingOffset: 100,
                             }}
-                            
+
                             height={88}
                             width={width}
 

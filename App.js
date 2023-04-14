@@ -8,6 +8,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import { Image } from 'react-native';
 
 
+
 const navigator = createMaterialBottomTabNavigator({
   Home: {
     screen: HomeScreen,
@@ -37,14 +38,10 @@ const navigator = createMaterialBottomTabNavigator({
 })
 
 
-
-
-// export default createAppContainer(test());
-
-
-
 const switchNavigator = createSwitchNavigator({
   Signup: StartScreen,
   navigator
 });
+
+
 export default createAppContainer(switchNavigator);
