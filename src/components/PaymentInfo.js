@@ -1,20 +1,21 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 
-const PaymentInfo = () => {
+const PaymentInfo = ({ address, date, time, total }) => {
+    
     return (
         <View style={styles.container}>
             <View style={styles.imageContainer}>
                 <Image style={styles.image} source={require("../../assets/images/icons/Union.png")} />
             </View>
             <View style={styles.infoContainer}>
-                <Text style={styles.address}>Lvivska Str. Parking Forum Lviv</Text>
+                <Text style={styles.address}>{address}</Text>
                 <View style={styles.data}>
-                    <Text style={styles.dataText}>Jun 12, 2022</Text>
-                    <Text style={styles.dataText}>12:40</Text>
+                    <Text style={styles.dataText}>{date}</Text>
+                    <Text style={styles.dataText}>{time}</Text>
                 </View>
             </View>
 
-            <Text style={styles.payment}>-12$</Text>
+            <Text style={styles.payment}>-{total}$</Text>
         </View>
     )
 }

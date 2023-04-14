@@ -7,10 +7,6 @@ import StartScreen from './src/screens/StartScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import { Image } from 'react-native';
 
-const isUserLogged = false;
-const cardsExist = true;
-
-
 
 const navigator = createMaterialBottomTabNavigator({
   Home: {
@@ -37,13 +33,18 @@ const navigator = createMaterialBottomTabNavigator({
     backgroundColor: '#333333',
     height: 66.01
   }
+
 })
 
 
+
+
+// export default createAppContainer(test());
+
+
+
 const switchNavigator = createSwitchNavigator({
-  Signup: CardsEmptyScreen,
+  Signup: StartScreen,
   navigator
 });
-
-
 export default createAppContainer(switchNavigator);
