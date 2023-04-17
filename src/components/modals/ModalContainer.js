@@ -1,6 +1,6 @@
+import UnderLineButton from "../buttons/UnderLineButton";
 import { Modal, View, StyleSheet } from "react-native";
 import Button from "../buttons/Button";
-import UnderLineButton from "../buttons/UnderLineButton";
 
 const ModalContainer = ({
     children,
@@ -11,6 +11,7 @@ const ModalContainer = ({
     primary,
     secondary
 }) => {
+
     return (
         <Modal
             animationType="fade"

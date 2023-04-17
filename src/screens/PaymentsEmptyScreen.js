@@ -4,7 +4,7 @@ import Button from "../components/buttons/Button";
 import Header from "../components/Header";
 import { useState } from "react";
 
-const CardsEmptyScreen = ({ navigation }) => {
+const PaymentsEmptyScreen = () => {
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -12,7 +12,7 @@ const CardsEmptyScreen = ({ navigation }) => {
         <View style={styles.darkBackground}>
             <View style={styles.lightArea}>
                 <ImageBackground source={require("../../assets/images/backgrounds/paymentBG.png")} resizeMode="cover" style={styles.backgroundImage}>
-                    <NewCardModal modalVisible={modalVisible} setModalVisible={setModalVisible} navigate={()=>navigation.navigate("Payments")} />
+                    <NewCardModal modalVisible={modalVisible} setModalVisible={setModalVisible}/>
 
                     <Header title="my cards" />
 
@@ -65,4 +65,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default CardsEmptyScreen
+export default PaymentsEmptyScreen

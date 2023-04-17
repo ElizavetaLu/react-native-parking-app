@@ -1,13 +1,14 @@
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import SignUpPhoneModal from "../components/modals/SignUpPhoneModal";
 import SignUpCodeModal from "../components/modals/SignUpCodeModal";
 import RoundedContainer from "../components/RoundedContainer";
-import { useEffect, useState } from "react";
+import { onCardDelete, updateCards } from "../helpers";
+import { NavigationEvents } from 'react-navigation';
 import Button from "../components/buttons/Button";
 import SmallCard from "../components/SmallCard";
 import Header from "../components/Header";
 import Input from "../components/Input";
+import { useState } from "react";
 
 
 const isUserLogged = true;
@@ -23,39 +24,12 @@ const ProfileScreen = () => {
 
     const [cards, setCards] = useState([]);
 
-    useEffect(() => {
-        AsyncStorage.getItem("cards")
-            .then(res => {
-                if (res) {
-                    const cardsArr = JSON.parse(res);
-                    setCards(cardsArr);
-                }
-            })
-            .catch(error => AsyncStorage.removeItem("cards"))
-
-    }, [])
-    
-
-    const onDelete = async (id) => {
-        try {
-            const cardsList = await AsyncStorage.getItem("cards");
-
-            if (cardsList) {
-                const cardsArr = JSON.parse(cardsList);
-                const newCardsArr = cardsArr.filter(item => item.id !== id);
-
-                await AsyncStorage.setItem("cards", JSON.stringify(newCardsArr));
-                setCards(newCardsArr);
-            }
-
-        } catch (error) {
-            await AsyncStorage.removeItem("cards");
-        }
-    }
 
     return (
         <RoundedContainer>
             <View style={styles.container}>
+
+                <NavigationEvents onDidFocus={() => updateCards(setCards)} />
 
                 <Header title="my profile" />
 
@@ -67,9 +41,9 @@ const ProfileScreen = () => {
                         ? <>
                             <View style={styles.avatarContainer}>
                                 <Image source={require("../../assets/images/icons/avatar.png")} />
-                                <View style={styles.pencil}>
+                                <Pressable style={styles.pencil} onPress={() => { }}>
                                     <Image source={require("../../assets/images/icons/pencil.png")} />
-                                </View>
+                                </Pressable>
                             </View>
                             <View style={styles.inputsContainer}>
                                 <Input value={name} onChange={setName} label="Name" />
@@ -77,7 +51,8 @@ const ProfileScreen = () => {
                                 <Input value={email} onChange={setEmail} label="Email" />
                             </View>
                         </>
-                        : < View style={styles.buttonContainer}>
+                        :
+                        < View style={styles.signUpContainer}>
                             <Button text="sign up" onPress={() => setPhoneModal(true)} primary />
                         </View >
                     }
@@ -100,7 +75,7 @@ const ProfileScreen = () => {
                                         blocked={item.blocked}
                                         cardNumber={item.cardNumber}
                                         expDate={item.expDate}
-                                        action={() => onDelete(item.id)}
+                                        action={() => onCardDelete(item.id, setCards)}
                                     />
                                 )
                             }}
@@ -124,9 +99,9 @@ const styles = StyleSheet.create({
     profile: {
         flex: 1
     },
-    buttonContainer: {
-        flex: 1,
-        justifyContent: "center"
+    signUpContainer: {
+        height: 250,
+        justifyContent: "center",
     },
     avatarContainer: {
         position: "relative",

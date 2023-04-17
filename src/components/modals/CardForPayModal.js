@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { cardNumberFormat, expDateFormat } from "../../helpersFunc";
+import { cardNumberFormat, expDateFormat } from "../../helpers";
 import { View, Text, Image, StyleSheet } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import CardDataInputs from "../CardDataInputs";
@@ -23,7 +23,7 @@ const CardForPayModal = ({ address, date, time, total, modalVisible, setModalVis
     const onPay = async () => {
 
         if (!valid.cardholderName(cardholder).isValid) return setErrorMessage('invalid cardholder name');
-        // if (!valid.number(cardNumber).isValid) return setErrorMessage('invalid card number');
+        if (!valid.number(cardNumber).isValid) return setErrorMessage('invalid card number');
         if (!valid.expirationDate(expDate).isValid) return setErrorMessage('invalid expiration date');
         if (!valid.cvv(cvv).isValid) return setErrorMessage('invalid CVV');
 
@@ -63,14 +63,13 @@ const CardForPayModal = ({ address, date, time, total, modalVisible, setModalVis
         // payment code
 
 
-
         // if payment  declined
         if (false) {
             setModalVisible(!modalVisible)
             return setErrorModal(true)
         }
 
-        // if payment succeeded save payment info
+        // if payment succeeded - save payment info
         const paymentData = {
             address,
             date,
@@ -172,7 +171,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: 28,
         marginLeft: 28,
-        // marginBottom: 20,
     },
     dataText: {
         color: "#8F8F8F",
