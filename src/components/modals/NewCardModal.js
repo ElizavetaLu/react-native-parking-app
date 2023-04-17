@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { cardNumberFormat, expDateFormat } from '../../helpersFunc';
+import { cardNumberFormat, expDateFormat } from '../../helpers';
 import { Text, StyleSheet } from "react-native";
 import CardDataInputs from "../CardDataInputs";
 import ModalContainer from "./ModalContainer";
@@ -8,7 +8,7 @@ import valid from "card-validator";
 import { useState } from "react";
 
 
-const NewCardModal = ({ setCards, modalVisible, setModalVisible, navigate }) => {
+const NewCardModal = ({ setCards, modalVisible, setModalVisible }) => {
 
     const [cardholder, setCardholder] = useState('');
     const [cardNumber, setCardNumber] = useState('');
@@ -20,7 +20,7 @@ const NewCardModal = ({ setCards, modalVisible, setModalVisible, navigate }) => 
     const onAdd = async () => {
 
         if (!valid.cardholderName(cardholder).isValid) return setErrorMessage('invalid cardholder name');
-        // if (!valid.number(cardNumber).isValid) return setErrorMessage('invalid card number');
+        if (!valid.number(cardNumber).isValid) return setErrorMessage('invalid card number');
         if (!valid.expirationDate(expDate).isValid) return setErrorMessage('invalid expiration date');
         if (!valid.cvv(cvv).isValid) return setErrorMessage('invalid CVV');
 
@@ -63,13 +63,10 @@ const NewCardModal = ({ setCards, modalVisible, setModalVisible, navigate }) => 
             await AsyncStorage.removeItem("cards");
         }
 
-        setCardholder('')
-        setCardNumber('')
-        setExpDate('')
-        setCvv('')
-
-
-        if (navigate) navigate()
+        setCardholder('');
+        setCardNumber('');
+        setExpDate('');
+        setCvv('');
     }
 
 

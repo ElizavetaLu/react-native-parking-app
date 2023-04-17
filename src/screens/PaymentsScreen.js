@@ -1,14 +1,14 @@
 import { View, FlatList, Text, StyleSheet, Image, Dimensions } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import RoundedContainer from "../components/RoundedContainer";
 import NewCardModal from "../components/modals/NewCardModal";
-import { useEffect, useState } from "react";
+import { updateCards, updatePayments } from "../helpers";
 import Carousel from 'react-native-reanimated-carousel';
 import PaymentInfo from "../components/PaymentInfo";
+import { NavigationEvents } from "react-navigation";
 import Button from "../components/buttons/Button";
 import Header from "../components/Header";
 import Card from "../components/Card";
-
+import { useState } from "react";
 
 const PaymentsScreen = () => {
 
@@ -21,37 +21,17 @@ const PaymentsScreen = () => {
 
     const [currentCard, setCurrentCard] = useState(null);
 
-
-    useEffect(() => {
-        AsyncStorage.getItem("cards")
-            .then(res => {
-                if (res) {
-                    const cardsArr = JSON.parse(res);
-                    setCards(cardsArr);
-                }
-            })
-            .catch(error => AsyncStorage.removeItem("cards"))
-    }, [])
-
-    useEffect(() => {
-        AsyncStorage.getItem("payments")
-            .then(res => {
-                if (res) {
-                    const paymentsArr = JSON.parse(res);
-                    setPayments(paymentsArr);
-                }
-            })
-            .catch(error => AsyncStorage.removeItem("payments"))
-    }, [])
-
-
     const onCarouselItemChange = (index) => {
         setCurrentCard(cards[index])
     }
 
-
     return (
         <RoundedContainer>
+            <NavigationEvents onDidFocus={() => {
+                updateCards(setCards)
+                updatePayments(setPayments)
+            }} />
+
             <NewCardModal setCards={setCards} modalVisible={modalVisible} setModalVisible={setModalVisible} />
 
             <Header title="my cards" />

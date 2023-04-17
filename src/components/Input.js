@@ -10,9 +10,7 @@ const Input = ({ value, onChange, label, isPassword, maxLength }) => {
             autoCorrect={false}
 
             isPassword={isPassword}
-            customShowPasswordComponent={<AntDesign name="eyeo" size={20} color="black" style={styles.eyeIcon} />}
-            customHidePasswordComponent={<AntDesign name="eye" size={20} color="black" style={styles.eyeIcon} />}
-
+            
             maxLength={maxLength}
             label={label}
             containerStyles={styles.inputContainer}

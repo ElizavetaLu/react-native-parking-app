@@ -14,9 +14,9 @@ import Header from "../components/Header";
 
 const coordinates = [
     { latitude: 49.842957, longitude: 24.031111, address: "Lvivska Str. Parking Forum Lviv 1", distance: "400m from you" },
-    { latitude: 49.844858, longitude: 24.031312, address: "Lvivska Str. Parking Forum Lviv 2", distance: "500m from you" },
+    { latitude: 49.844858, longitude: 24.032312, address: "Lvivska Str. Parking Forum Lviv 2", distance: "500m from you" },
     { latitude: 49.845759, longitude: 24.031413, address: "Lvivska Str. Parking Forum Lviv 3", distance: "600m from you" },
-    { latitude: 49.846650, longitude: 24.031514, address: "Lvivska Str. Parking Forum Lviv 4", distance: "700m from you" },
+    { latitude: 49.844650, longitude: 24.030014, address: "Lvivska Str. Parking Forum Lviv 4", distance: "700m from you" },
 ]
 
 
@@ -40,8 +40,8 @@ const HomeScreen = () => {
         map.animateToRegion({
             latitude: location.latitude,
             longitude: location.longitude,
-            latitudeDelta: 0.00722,
-            longitudeDelta: 0.00321,
+            latitudeDelta: 0.0049,
+            longitudeDelta: 0.0019,
         });
 
         markers[index].showCallout();
@@ -98,8 +98,8 @@ const HomeScreen = () => {
                         initialRegion={{
                             latitude: 49.842957,
                             longitude: 24.031111,
-                            latitudeDelta: 0.00722,
-                            longitudeDelta: 0.00321,
+                            latitudeDelta: 0.0049,
+                            longitudeDelta: 0.0019,
                         }}
                     >
                         {coordinates.map((marker, index) => {
