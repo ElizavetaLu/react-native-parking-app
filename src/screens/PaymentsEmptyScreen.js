@@ -4,7 +4,7 @@ import Button from "../components/buttons/Button";
 import Header from "../components/Header";
 import { useState } from "react";
 
-const PaymentsEmptyScreen = () => {
+const PaymentsEmptyScreen = ({ setCards }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -12,7 +12,8 @@ const PaymentsEmptyScreen = () => {
         <View style={styles.darkBackground}>
             <View style={styles.lightArea}>
                 <ImageBackground source={require("../../assets/images/backgrounds/paymentBG.png")} resizeMode="cover" style={styles.backgroundImage}>
-                    <NewCardModal modalVisible={modalVisible} setModalVisible={setModalVisible}/>
+
+                    <NewCardModal setCards={setCards} modalVisible={modalVisible} setModalVisible={setModalVisible} />
 
                     <Header title="my cards" />
 

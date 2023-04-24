@@ -1,44 +1,59 @@
-import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
-import SignUpPhoneModal from "../components/modals/SignUpPhoneModal";
-import SignUpCodeModal from "../components/modals/SignUpCodeModal";
-import RoundedContainer from "../components/RoundedContainer";
-import { onCardDelete, updateCards } from "../helpers";
+import { FlatList, Image, Pressable, StyleSheet, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationEvents } from 'react-navigation';
+import { useEffect, useState } from "react";
+
+import UnAuthProfileScreen from "./UnAuthProfileScreen";
+
+import RoundedContainer from "../components/RoundedContainer";
 import Button from "../components/buttons/Button";
 import SmallCard from "../components/SmallCard";
+import DummyText from "../components/DummyText";
 import Header from "../components/Header";
 import Input from "../components/Input";
-import { useState } from "react";
+
+import { onCardDelete, updateCards } from "../helpers";
 
 
-const isUserLogged = true;
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
+
+    const [token, setToken] = useState(null);
 
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
 
-    const [phoneModal, setPhoneModal] = useState(false);
-    const [codeModal, setCodeModal] = useState(false);
 
     const [cards, setCards] = useState([]);
 
+    useEffect(() => {
+        AsyncStorage.getItem("token")
+            .then(res => setToken(res))
+            .catch(err => console.log(err))
+    }, [])
+
+    useEffect(() => {
+        updateCards(setCards);
+    }, [])
+
+    const logOut = async () => {
+        await AsyncStorage.removeItem("token")
+        navigation.navigate('Start')
+    }
+
 
     return (
-        <RoundedContainer>
-            <View style={styles.container}>
+        <>
+            {token ?
+                <RoundedContainer>
+                    <View View style={styles.container} >
 
-                <NavigationEvents onDidFocus={() => updateCards(setCards)} />
+                        <NavigationEvents onDidFocus={() => updateCards(setCards)} />
 
-                <Header title="my profile" />
+                        <Header title="my profile" />
 
-                <SignUpPhoneModal modalVisible={phoneModal} setModalVisible={setPhoneModal} openNextModal={setCodeModal} />
-                <SignUpCodeModal modalVisible={codeModal} setModalVisible={setCodeModal} />
-
-                <View style={styles.profile}>
-                    {isUserLogged
-                        ? <>
+                        <View style={styles.profile}>
                             <View style={styles.avatarContainer}>
                                 <Image source={require("../../assets/images/icons/avatar.png")} />
                                 <Pressable style={styles.pencil} onPress={() => { }}>
@@ -50,44 +65,43 @@ const ProfileScreen = () => {
                                 <Input value={phone} onChange={setPhone} label="Phone Number" maxLength={15} />
                                 <Input value={email} onChange={setEmail} label="Email" />
                             </View>
-                        </>
-                        :
-                        < View style={styles.signUpContainer}>
-                            <Button text="sign up" onPress={() => setPhoneModal(true)} primary />
-                        </View >
-                    }
 
-                    <View style={styles.cards}>
+                            <View style={styles.cards}>
 
-                        <Header title="my cards" />
+                                <Header title="my cards" />
 
 
-                        {cards.length < 1 && <Text style={styles.dump}>You have no added cards</Text>}
+                                {cards.length < 1 && <DummyText text="You have no added cards" />}
 
-                        <FlatList
-                            style={styles.list}
-                            data={cards}
-                            keyExtractor={item => item.id}
-                            ItemSeparatorComponent={() => <View style={styles.separator} />}
-                            renderItem={({ item }) => {
-                                return (
-                                    <SmallCard
-                                        blocked={item.blocked}
-                                        cardNumber={item.cardNumber}
-                                        expDate={item.expDate}
-                                        action={() => onCardDelete(item.id, setCards)}
-                                    />
-                                )
-                            }}
-                        />
-                        <View style={styles.buttonContainer}>
-                            <Button text="Delete Profile" onPress={() => { }} primary />
+                                <FlatList
+                                    style={styles.list}
+                                    data={cards}
+                                    keyExtractor={item => item.id}
+                                    ItemSeparatorComponent={() => <View style={styles.separator} />}
+                                    renderItem={({ item }) => {
+                                        return (
+                                            <SmallCard
+                                                blocked={item.blocked}
+                                                cardNumber={item.cardNumber}
+                                                expDate={item.expDate}
+                                                action={() => onCardDelete(item.id, setCards)}
+                                            />
+                                        )
+                                    }}
+                                />
+                                <View style={styles.buttonContainer}>
+                                    <Button text="Delete Profile" onPress={() => { }} primary />
+                                    <Button text="Log Out" onPress={logOut} primary />
+                                </View>
+                            </View>
+
                         </View>
-                    </View>
+                    </View >
+                </RoundedContainer >
 
-                </View>
-            </View>
-        </RoundedContainer>
+                : <UnAuthProfileScreen setToken={setToken} />
+
+            }</>
     )
 }
 
@@ -99,13 +113,9 @@ const styles = StyleSheet.create({
     profile: {
         flex: 1
     },
-    signUpContainer: {
-        height: 250,
-        justifyContent: "center",
-    },
     avatarContainer: {
         position: "relative",
-        alignSelf: "center",
+        alignSelf: "center"
     },
     pencil: {
         position: "absolute",
@@ -130,12 +140,9 @@ const styles = StyleSheet.create({
     separator: {
         height: 12
     },
-    dump: {
-        color: "#8F8F8F",
-        fontSize: 12,
-        fontWeight: 400
-    },
     buttonContainer: {
+        flexDirection: "row",
+        gap: 20,
         position: "absolute",
         bottom: 0,
         right: 0,

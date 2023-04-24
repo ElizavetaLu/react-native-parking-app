@@ -1,11 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { cardNumberFormat, expDateFormat } from '../../helpers';
 import { Text, StyleSheet } from "react-native";
+import { useState } from "react";
 import CardDataInputs from "../CardDataInputs";
 import ModalContainer from "./ModalContainer";
+import { cardNumberFormat, expDateFormat } from '../../helpers';
 import uuid from 'react-native-uuid';
 import valid from "card-validator";
-import { useState } from "react";
 
 
 const NewCardModal = ({ setCards, modalVisible, setModalVisible }) => {

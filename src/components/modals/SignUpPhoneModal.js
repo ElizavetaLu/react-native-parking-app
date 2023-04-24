@@ -1,11 +1,11 @@
 import { Text, StyleSheet, View } from "react-native";
-import ModalContainer from "./ModalContainer";
 import { useState } from "react";
+import ModalContainer from "./ModalContainer";
 import Input from "../Input";
 
 const SignUpPhoneModal = ({ modalVisible, setModalVisible, openNextModal }) => {
 
-    const [number, setNumber] = useState('');
+    const [number, setNumber] = useState('+ ');
 
     const onButtonPress = () => {
         //sign up code
@@ -17,6 +17,12 @@ const SignUpPhoneModal = ({ modalVisible, setModalVisible, openNextModal }) => {
         openNextModal(true);
     }
 
+    const onPhoneChange = (value) => {
+        if (isNaN(value.slice(1))) return;
+        setNumber(value)
+    }
+
+
     return (
         <ModalContainer
             modalVisible={modalVisible}
@@ -26,9 +32,16 @@ const SignUpPhoneModal = ({ modalVisible, setModalVisible, openNextModal }) => {
             secondary
         >
             <Text style={styles.title}>Sign Up</Text>
+
+
             <Text style={styles.text}>Please enter your Phone number</Text>
 
-            <Input value={number} onChange={setNumber} label="Phone Number" maxLength={15} />
+            <Input
+                value={number}
+                onChange={onPhoneChange}
+                label="Phone Number"
+                maxLength={15}
+            />
 
             <View style={styles.separator}></View>
         </ModalContainer>

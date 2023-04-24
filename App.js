@@ -1,14 +1,11 @@
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-import PaymentsEmptyScreen from './src/screens/PaymentsEmptyScreen';
 import PaymentsScreen from './src/screens/PaymentsScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import StartScreen from './src/screens/StartScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import { Image } from 'react-native';
 
-
-const isEmpty = false;
 
 
 const navigator = createMaterialBottomTabNavigator({
@@ -19,7 +16,7 @@ const navigator = createMaterialBottomTabNavigator({
     }
   },
   Payments: {
-    screen: isEmpty ? PaymentsEmptyScreen : PaymentsScreen,
+    screen: PaymentsScreen,
     navigationOptions: {
       tabBarIcon: () => <Image source={require("./assets/images/icons/cards.png")} />
     }
@@ -39,7 +36,7 @@ const navigator = createMaterialBottomTabNavigator({
 })
 
 const switchNavigator = createSwitchNavigator({
-  Signup: StartScreen,
+  Start: StartScreen,
   navigator
 });
 

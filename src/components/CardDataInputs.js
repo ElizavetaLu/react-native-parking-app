@@ -22,7 +22,7 @@ const CardDataInputs = ({
                 <View style={styles.expInputContainer}>
                     <Input value={expDate} onChange={setExpDate} label="Expire Date" maxLength={5} />
                 </View>
-                <Input value={cvv} onChange={setCvv} label="CVV" isPassword maxLength={3} />
+                <Input  value={cvv} onChange={setCvv} label="CVV" maxLength={3} />
 
             </View>
         </View>
