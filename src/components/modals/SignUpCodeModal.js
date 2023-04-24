@@ -1,8 +1,10 @@
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import { useRef, useState } from "react";
 import ModalContainer from "./ModalContainer";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const SignUpCodeModal = ({ navigate, modalVisible, setModalVisible }) => {
+
+const SignUpCodeModal = ({ modalVisible, setModalVisible, setToken }) => {
 
     const [onFocuse, setOnFocuse] = useState(1);
 
@@ -17,16 +19,21 @@ const SignUpCodeModal = ({ navigate, modalVisible, setModalVisible }) => {
 
     const borderBottomColor = number => onFocuse === number || number < onFocuse ? "#464646" : "#DEDDDD";
 
-    const onButtonPress = () => {
+    const onButtonPress = async () => {
         const code = input1Value + input2Value + input3Value + input4Value;
 
         // sign up code
 
         //close popup
-        setModalVisible(!modalVisible)
+        if (true) {
 
-        //navigate to Home screen
-        navigate()
+            const token = '123test'
+
+            await AsyncStorage.setItem("token", token);
+
+            setToken(token)
+            setModalVisible(!modalVisible);
+        }
     }
 
     return (

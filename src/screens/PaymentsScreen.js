@@ -1,16 +1,36 @@
 import { View, FlatList, Text, StyleSheet, Image, Dimensions } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Carousel from 'react-native-reanimated-carousel';
+import { NavigationEvents } from "react-navigation";
+import { useEffect, useState } from "react";
+
 import RoundedContainer from "../components/RoundedContainer";
 import NewCardModal from "../components/modals/NewCardModal";
-import { updateCards, updatePayments } from "../helpers";
-import Carousel from 'react-native-reanimated-carousel';
+import PaymentsEmptyScreen from "./PaymentsEmptyScreen";
 import PaymentInfo from "../components/PaymentInfo";
-import { NavigationEvents } from "react-navigation";
 import Button from "../components/buttons/Button";
+import DummyText from "../components/DummyText";
 import Header from "../components/Header";
 import Card from "../components/Card";
-import { useState } from "react";
+
+import { updateCards, updatePayments } from "../helpers";
+
+import SignUpPhoneModal from "../components/modals/SignUpPhoneModal";
+import SignUpCodeModal from "../components/modals/SignUpCodeModal";
 
 const PaymentsScreen = () => {
+
+    const [token, setToken] = useState(null);
+
+    useEffect(() => {
+        AsyncStorage.getItem("token")
+            .then(res => setToken(res))
+            .catch(err => console.log(err))
+    }, [])
+
+    const [phoneModal, setPhoneModal] = useState(false);
+    const [codeModal, setCodeModal] = useState(false);
+
 
     const width = Dimensions.get('window').width;
 
@@ -22,78 +42,103 @@ const PaymentsScreen = () => {
     const [currentCard, setCurrentCard] = useState(null);
 
     const onCarouselItemChange = (index) => {
-        setCurrentCard(cards[index])
+        setCurrentCard(cards[index]);
     }
 
+    useEffect(() => {
+        updateCards(setCards);
+        updatePayments(setPayments);
+    }, [])
+
     return (
-        <RoundedContainer>
-            <NavigationEvents onDidFocus={() => {
-                updateCards(setCards)
-                updatePayments(setPayments)
-            }} />
+        <>
+            {cards.length > 0 || payments.length > 0
+                ? <RoundedContainer>
+                    <NavigationEvents onDidFocus={() => {
+                        updateCards(setCards)
+                        updatePayments(setPayments)
+                    }} />
 
-            <NewCardModal setCards={setCards} modalVisible={modalVisible} setModalVisible={setModalVisible} />
+                    <NewCardModal
+                        setCards={setCards}
+                        modalVisible={modalVisible}
+                        setModalVisible={setModalVisible}
+                    />
 
-            <Header title="my cards" />
+                    <SignUpPhoneModal modalVisible={phoneModal} setModalVisible={setPhoneModal} openNextModal={setCodeModal} />
+                    <SignUpCodeModal modalVisible={codeModal} setModalVisible={setCodeModal} setToken={setToken} />
 
-            <View >
-                {cards.length < 1
-                    ? <View style={styles.dumpContainer}>
-                        <Text style={styles.dump}>You have no added cards</Text>
-                        <Image source={require("../../assets/images/creditCard.png")} />
-                    </View>
-                    : <View style={{ alignItems: cards.length === 1 ? "center" : "none" }}>
-                        <Carousel
-                            loop={false}
-                            mode="parallax"
-                            modeConfig={{
-                                parallaxScrollingScale: 0.95,
-                                parallaxScrollingOffset: 200,
-                            }}
+                    <Header title="my cards" />
 
-                            height={300}
-                            width={cards.length === 1 ? 230 : width}
+                    <View >
+                        {cards.length < 1
+                            ? <View style={styles.dummyContainer}>
+                                <DummyText text="You have no added cards" />
+                                <Image source={require("../../assets/images/creditCard.png")} />
+                            </View>
 
-                            data={cards}
-                            renderItem={({ item, index }) => (
-                                <Card
-                                    key={item.id}
-                                    blocked={item.blocked}
-                                    cardNumber={item.cardNumber}
-                                    expDate={item.expDate}
+                            : <View style={{ alignItems: cards.length === 1 ? "center" : "none" }}>
+                                <Carousel
+                                    loop={false}
+                                    mode="parallax"
+                                    modeConfig={{
+                                        parallaxScrollingScale: 0.95,
+                                        parallaxScrollingOffset: 200,
+                                    }}
+
+                                    height={300}
+                                    width={cards.length === 1 ? 230 : width}
+
+                                    data={cards}
+                                    renderItem={({ item, index }) => (
+                                        <Card
+                                            key={item.id}
+                                            blocked={item.blocked}
+                                            cardNumber={item.cardNumber}
+                                            expDate={item.expDate}
+                                        />
+                                    )}
+                                    onSnapToItem={onCarouselItemChange}
                                 />
-                            )}
-                            onSnapToItem={onCarouselItemChange}
-                        />
-                    </View>
-                }
+                            </View>
+                        }
 
 
-                <Text style={styles.title}>Payments</Text>
+                        <Text style={styles.title}>Payments</Text>
 
 
-                <FlatList
-                    style={styles.payments}
-                    data={payments}
-                    keyExtractor={item => item.id}
-                    ItemSeparatorComponent={() => <View style={styles.verticalSeparator} />}
-                    renderItem={({ item }) => {
-                        return (
-                            <PaymentInfo
-                                address={item.address}
-                                date={item.date}
-                                time={item.time}
-                                total={item.total}
+                        {payments.length > 0
+                            ? <FlatList
+                                style={styles.payments}
+                                data={payments}
+                                keyExtractor={item => item.id}
+                                ItemSeparatorComponent={() => <View style={styles.verticalSeparator} />}
+                                renderItem={({ item }) => {
+                                    return (
+                                        <PaymentInfo
+                                            address={item.address}
+                                            date={item.date}
+                                            time={item.time}
+                                            total={item.total}
+                                        />
+                                    )
+                                }}
                             />
-                        )
-                    }}
-                />
 
-            </View>
-            <View style={styles.buttonContainer}>
-                <Button text="add card" onPress={() => setModalVisible(!modalVisible)} primary />
-            </View>
-        </RoundedContainer>
+                            : <DummyText text="Your payment history is empty" />
+                        }
+
+                    </View>
+                    <View style={styles.buttonContainer}>
+                        {token
+                            ? <Button text="add card" onPress={() => setModalVisible(!modalVisible)} primary />
+                            : <Button text="sign in" onPress={() => setPhoneModal(!phoneModal)} primary />}
+                    </View>
+                </RoundedContainer>
+
+                : <PaymentsEmptyScreen setCards={setCards} />
+            }
+        </>
     )
 }
 
@@ -115,15 +160,9 @@ const styles = StyleSheet.create({
     verticalSeparator: {
         height: 16
     },
-    dumpContainer: {
+    dummyContainer: {
         alignItems: "center",
         gap: 20
-    },
-    dump: {
-        textAlign: "center",
-        color: "#8F8F8F",
-        fontSize: 12,
-        fontWeight: 400
     },
     buttonContainer: {
         position: "absolute",

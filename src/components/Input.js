@@ -1,16 +1,13 @@
 import { FloatingLabelInput } from 'react-native-floating-label-input';
-import { AntDesign } from '@expo/vector-icons';
 import { StyleSheet } from "react-native";
 
-const Input = ({ value, onChange, label, isPassword, maxLength }) => {
+const Input = ({ value, onChange, label, maxLength }) => {
 
     return (
         <FloatingLabelInput
             autoCapitalize="none"
             autoCorrect={false}
 
-            isPassword={isPassword}
-            
             maxLength={maxLength}
             label={label}
             containerStyles={styles.inputContainer}
