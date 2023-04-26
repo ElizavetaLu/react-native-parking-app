@@ -1,13 +1,13 @@
 import { Dimensions, Image, StyleSheet, View, SafeAreaView, Pressable, Animated } from "react-native";
-import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+// import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import CardForPayModal from "../components/modals/CardForPayModal";
 import { requestForegroundPermissionsAsync } from "expo-location";
 import PaymentModal from "../components/modals/PaymentModal";
 import ErrorModal from "../components/modals/ErrorModal";
-import Carousel from 'react-native-reanimated-carousel';
+// import Carousel from 'react-native-reanimated-carousel';
 import { useEffect, useState } from "react";
-import MapCard from "../components/MapCard";
-import mapDarkStyle from "../mapDarkStyle";
+// import MapCard from "../components/MapCard";
+// import mapDarkStyle from "../mapDarkStyle";
 import Header from "../components/Header";
 
 
@@ -90,7 +90,7 @@ const HomeScreen = () => {
 
             <View style={styles.mapWrapper}>
                 <View style={styles.mapContainer}>
-                    <MapView
+                    {/* <MapView
                         style={styles.map}
                         provider={PROVIDER_GOOGLE}
                         customMapStyle={mapDarkStyle}
@@ -140,7 +140,7 @@ const HomeScreen = () => {
                             )}
                             onSnapToItem={onCarouselItemChange}
                         />
-                    </View>
+                    </View> */}
                 </View>
             </View>
 

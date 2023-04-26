@@ -6,7 +6,7 @@ import Separator from '../components/Separator';
 import Button from '../components/buttons/Button';
 
 
-const UnAuthProfileScreen = ({ setToken }) => {
+const UnAuthProfileScreen = (setToken) => {
 
     const [phoneModal, setPhoneModal] = useState(false);
     const [codeModal, setCodeModal] = useState(false);
