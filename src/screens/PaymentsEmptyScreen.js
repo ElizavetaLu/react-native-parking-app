@@ -4,7 +4,7 @@ import Button from "../components/buttons/Button";
 import Header from "../components/Header";
 import { useState } from "react";
 
-const PaymentsEmptyScreen = ({ setCards }) => {
+const PaymentsEmptyScreen = (setCards) => {
 
     const [modalVisible, setModalVisible] = useState(false);
 

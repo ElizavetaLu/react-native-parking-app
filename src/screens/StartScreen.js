@@ -9,7 +9,7 @@ const StartScreen = ({ navigation }) => {
             <View style={styles.container}>
                 <Text style={styles.title}>pay for parking directly in the app</Text>
 
-                <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={() => navigation.navigate('Home')}>
+                <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={() => navigation.navigate('Main')}>
                     <Text style={styles.buttonText}> Get Started</Text>
                     <Ionicons name="arrow-forward" size={24} color="white" />
                 </TouchableOpacity>

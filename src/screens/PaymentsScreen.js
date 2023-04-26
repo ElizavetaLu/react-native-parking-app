@@ -1,12 +1,10 @@
 import { View, FlatList, Text, StyleSheet, Image, Dimensions } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Carousel from 'react-native-reanimated-carousel';
-import { NavigationEvents } from "react-navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import RoundedContainer from "../components/RoundedContainer";
 import NewCardModal from "../components/modals/NewCardModal";
-import PaymentsEmptyScreen from "./PaymentsEmptyScreen";
 import PaymentInfo from "../components/PaymentInfo";
 import Button from "../components/buttons/Button";
 import DummyText from "../components/DummyText";
@@ -17,6 +15,10 @@ import { updateCards, updatePayments } from "../helpers";
 
 import SignUpPhoneModal from "../components/modals/SignUpPhoneModal";
 import SignUpCodeModal from "../components/modals/SignUpCodeModal";
+
+
+
+import { useFocusEffect } from '@react-navigation/native';
 
 const PaymentsScreen = () => {
 
@@ -46,99 +48,98 @@ const PaymentsScreen = () => {
     }
 
     useEffect(() => {
+
         updateCards(setCards);
         updatePayments(setPayments);
     }, [])
 
-    return (
-        <>
-            {cards.length > 0 || payments.length > 0
-                ? <RoundedContainer>
-                    <NavigationEvents onDidFocus={() => {
-                        updateCards(setCards)
-                        updatePayments(setPayments)
-                    }} />
 
-                    <NewCardModal
-                        setCards={setCards}
-                        modalVisible={modalVisible}
-                        setModalVisible={setModalVisible}
+    useFocusEffect(
+        useCallback(() => {
+            updateCards(setCards)
+            updatePayments(setPayments)
+        }, [setCards, setPayments])
+    );
+
+    return (
+        <RoundedContainer>
+
+            <NewCardModal
+                setCards={setCards}
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+            />
+
+            <SignUpPhoneModal modalVisible={phoneModal} setModalVisible={setPhoneModal} openNextModal={setCodeModal} />
+            <SignUpCodeModal modalVisible={codeModal} setModalVisible={setCodeModal} setToken={setToken} />
+
+            <Header title="my cards" />
+
+            <View >
+                {cards.length < 1
+                    ? <View style={styles.dummyContainer}>
+                        <DummyText text="You have no added cards" />
+                        <Image source={require("../../assets/images/creditCard.png")} />
+                    </View>
+
+                    : <View style={{ alignItems: cards.length === 1 ? "center" : "none" }}>
+                        <Carousel
+                            loop={false}
+                            mode="parallax"
+                            modeConfig={{
+                                parallaxScrollingScale: 0.95,
+                                parallaxScrollingOffset: 200,
+                            }}
+
+                            height={300}
+                            width={cards.length === 1 ? 230 : width}
+
+                            data={cards}
+                            renderItem={({ item, index }) => (
+                                <Card
+                                    key={item.id}
+                                    blocked={item.blocked}
+                                    cardNumber={item.cardNumber}
+                                    expDate={item.expDate}
+                                />
+                            )}
+                            onSnapToItem={onCarouselItemChange}
+                        />
+                    </View>
+                }
+
+
+                <Text style={styles.title}>Payments</Text>
+
+
+                {payments.length > 0
+                    ? <FlatList
+                        style={styles.payments}
+                        data={payments}
+                        keyExtractor={item => item.id}
+                        ItemSeparatorComponent={() => <View style={styles.verticalSeparator} />}
+                        renderItem={({ item }) => {
+                            return (
+                                <PaymentInfo
+                                    address={item.address}
+                                    date={item.date}
+                                    time={item.time}
+                                    total={item.total}
+                                />
+                            )
+                        }}
                     />
 
-                    <SignUpPhoneModal modalVisible={phoneModal} setModalVisible={setPhoneModal} openNextModal={setCodeModal} />
-                    <SignUpCodeModal modalVisible={codeModal} setModalVisible={setCodeModal} setToken={setToken} />
+                    : <DummyText text="Your payment history is empty" />
+                }
 
-                    <Header title="my cards" />
-
-                    <View >
-                        {cards.length < 1
-                            ? <View style={styles.dummyContainer}>
-                                <DummyText text="You have no added cards" />
-                                <Image source={require("../../assets/images/creditCard.png")} />
-                            </View>
-
-                            : <View style={{ alignItems: cards.length === 1 ? "center" : "none" }}>
-                                <Carousel
-                                    loop={false}
-                                    mode="parallax"
-                                    modeConfig={{
-                                        parallaxScrollingScale: 0.95,
-                                        parallaxScrollingOffset: 200,
-                                    }}
-
-                                    height={300}
-                                    width={cards.length === 1 ? 230 : width}
-
-                                    data={cards}
-                                    renderItem={({ item, index }) => (
-                                        <Card
-                                            key={item.id}
-                                            blocked={item.blocked}
-                                            cardNumber={item.cardNumber}
-                                            expDate={item.expDate}
-                                        />
-                                    )}
-                                    onSnapToItem={onCarouselItemChange}
-                                />
-                            </View>
-                        }
-
-
-                        <Text style={styles.title}>Payments</Text>
-
-
-                        {payments.length > 0
-                            ? <FlatList
-                                style={styles.payments}
-                                data={payments}
-                                keyExtractor={item => item.id}
-                                ItemSeparatorComponent={() => <View style={styles.verticalSeparator} />}
-                                renderItem={({ item }) => {
-                                    return (
-                                        <PaymentInfo
-                                            address={item.address}
-                                            date={item.date}
-                                            time={item.time}
-                                            total={item.total}
-                                        />
-                                    )
-                                }}
-                            />
-
-                            : <DummyText text="Your payment history is empty" />
-                        }
-
-                    </View>
-                    <View style={styles.buttonContainer}>
-                        {token
-                            ? <Button text="add card" onPress={() => setModalVisible(!modalVisible)} primary />
-                            : <Button text="sign in" onPress={() => setPhoneModal(!phoneModal)} primary />}
-                    </View>
-                </RoundedContainer>
-
-                : <PaymentsEmptyScreen setCards={setCards} />
-            }
-        </>
+            </View>
+            <View style={styles.buttonContainer}>
+                {token
+                    ? <Button text="add card" onPress={() => setModalVisible(!modalVisible)} primary />
+                    : <Button text="sign in" onPress={() => setPhoneModal(!phoneModal)} primary />}
+            </View>
+        </RoundedContainer>
     )
 }
 
