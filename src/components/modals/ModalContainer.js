@@ -26,7 +26,7 @@ const ModalContainer = ({
 
                     <View style={styles.btnContainer}>
                         {buttonText && <Button text={buttonText} onPress={action} primary={primary} secondary={secondary} />}
-                        <UnderLineButton text="close" onPress={setModalVisible} />
+                        <UnderLineButton text="close" onPress={() => setModalVisible(!modalVisible)} />
                     </View>
                 </View>
             </View>

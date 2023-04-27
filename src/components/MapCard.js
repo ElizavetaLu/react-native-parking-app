@@ -1,4 +1,8 @@
-import { View, Image, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { Image } from 'expo-image';
+
+
+const width = Dimensions.get('window').width;
 
 const MapCard = ({ active, address, distance }) => {
 
@@ -10,7 +14,7 @@ const MapCard = ({ active, address, distance }) => {
             />}
             <View style={styles.locationRow}>
                 <Image style={styles.locationIcon} source={require('../../assets/images/icons/location.png')} />
-                <Text style={{ fontSize: 14, fontWeight: 500, lineHeight: 19.6, color: "#fff" }}>{address}</Text>
+                <Text style={styles.address}>{address}</Text>
             </View>
             <Text style={styles.distance}>{distance}</Text>
         </View>
@@ -18,11 +22,6 @@ const MapCard = ({ active, address, distance }) => {
 }
 
 const styles = StyleSheet.create({
-    icon: {
-        position: "absolute", 
-        top: -6,
-        right: -6
-    },
     card: {
         borderWidth: 1,
         borderColor: "#A7A7A7",
@@ -33,18 +32,29 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         borderRadius: 28,
         height: 82,
-        width: 340
+        width: width / 1.3
     },
     locationRow: {
         flexDirection: "row",
         alignItems: "center",
         gap: 10
     },
+    icon: {
+        position: "absolute",
+        top: -6,
+        right: -6,
+        width: 24,
+        height: 24
+    },
+    locationIcon: {
+        width: 18,
+        height: 22
+    },
     address: {
-        fontWeight: 500,
         fontSize: 14,
+        fontWeight: 500,
         lineHeight: 19.6,
-        marginBottom: 4
+        color: "#fff"
     },
     distance: {
         marginLeft: 35,

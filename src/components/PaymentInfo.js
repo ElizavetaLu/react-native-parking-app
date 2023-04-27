@@ -1,4 +1,6 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import { Image } from 'expo-image';
+
 
 const PaymentInfo = ({ address, date, time, total }) => {
     

@@ -1,9 +1,10 @@
 import { View, Text, ImageBackground, StyleSheet } from 'react-native';
 import { useState } from 'react';
+
 import SignUpPhoneModal from '../components/modals/SignUpPhoneModal';
 import SignUpCodeModal from '../components/modals/SignUpCodeModal';
-import Separator from '../components/Separator';
 import Button from '../components/buttons/Button';
+import Separator from '../components/Separator';
 
 
 const UnAuthProfileScreen = (setToken) => {
@@ -57,8 +58,7 @@ const styles = StyleSheet.create({
         borderBottomStartRadius: 32,
     },
     background: {
-        flex: 1,
-        paddingTop: 80
+        flex: 1
     },
     container: {
         flex: 1,

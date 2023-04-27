@@ -1,6 +1,7 @@
-import { FlatList, Image, Pressable, StyleSheet, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useCallback, useState } from "react";
+import { Image } from 'expo-image';
 
 import RoundedContainer from "../components/RoundedContainer";
 import Button from "../components/buttons/Button";
@@ -31,7 +32,7 @@ const ProfileScreen = ({ navigation }) => {
 
     const logOut = async () => {
         await AsyncStorage.removeItem("token")
-        navigation.navigate('Start')
+        navigation.navigate('Welcome')
     }
 
 
@@ -43,9 +44,10 @@ const ProfileScreen = ({ navigation }) => {
 
                 <View style={styles.profile}>
                     <View style={styles.avatarContainer}>
-                        <Image source={require("../../assets/images/icons/avatar.png")} />
+                        <Image style={styles.profileImageSize} source={require("../../assets/images/icons/avatar.png")} />
+
                         <Pressable style={styles.pencil} onPress={() => { }}>
-                            <Image source={require("../../assets/images/icons/pencil.png")} />
+                            <Image style={styles.pencilImageSize} source={require("../../assets/images/icons/pencil.png")} />
                         </Pressable>
                     </View>
                     <View style={styles.inputsContainer}>
@@ -96,6 +98,14 @@ const styles = StyleSheet.create({
     },
     profile: {
         flex: 1
+    },
+    profileImageSize: {
+        width: 96,
+        height: 96
+    },
+    pencilImageSize: {
+        width: 14,
+        height: 14
     },
     avatarContainer: {
         position: "relative",

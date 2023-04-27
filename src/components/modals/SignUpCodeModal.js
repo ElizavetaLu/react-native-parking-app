@@ -1,7 +1,8 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import { useRef, useState } from "react";
+
 import ModalContainer from "./ModalContainer";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const SignUpCodeModal = ({ modalVisible, setModalVisible, setToken }) => {
@@ -130,7 +131,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         marginBottom: 17
     },
-
     input: {
         borderBottomWidth: 1,
         textAlign: "center",

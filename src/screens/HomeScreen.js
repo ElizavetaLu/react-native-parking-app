@@ -1,15 +1,18 @@
-import { Dimensions, Image, StyleSheet, View, SafeAreaView, Pressable, Animated } from "react-native";
+import { Dimensions, StyleSheet, View, SafeAreaView, Pressable, Animated } from "react-native";
+import { Camera } from 'expo-camera';
 // import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import CardForPayModal from "../components/modals/CardForPayModal";
 import { requestForegroundPermissionsAsync } from "expo-location";
+import Carousel from 'react-native-reanimated-carousel';
+import { useEffect, useState } from "react";
+import { Image } from 'expo-image';
+
+import CardForPayModal from "../components/modals/CardForPayModal";
 import PaymentModal from "../components/modals/PaymentModal";
 import ErrorModal from "../components/modals/ErrorModal";
-// import Carousel from 'react-native-reanimated-carousel';
-import { useEffect, useState } from "react";
-// import MapCard from "../components/MapCard";
-// import mapDarkStyle from "../mapDarkStyle";
+import MapCard from "../components/MapCard";
 import Header from "../components/Header";
 
+// import mapDarkStyle from "../mapDarkStyle";
 
 
 const coordinates = [
@@ -20,7 +23,7 @@ const coordinates = [
 ]
 
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
 
     const [paymentModal, setPaymentModal] = useState(false);
     const [cardDataModal, setCardDataModal] = useState(false);
@@ -56,7 +59,10 @@ const HomeScreen = () => {
         }
     }
 
+    const [permission, requestPermission] = Camera.useCameraPermissions();
+
     useEffect(() => {
+        requestPermission();
         askLocationPermission();
     }, [])
 
@@ -82,10 +88,11 @@ const HomeScreen = () => {
                 setModalVisible={setCardDataModal}
                 setErrorModal={setErrorModal}
             />
+
             <ErrorModal modalVisible={errorModal} setModalVisible={setErrorModal} />
 
-            <Pressable onPress={() => { }}>
-                <Image style={styles.image} source={require('../../assets/images/scanQR.png')} />
+            <Pressable style={styles.image} onPress={() => navigation.navigate('Camera')}>
+                <Image style={styles.imageSize} source={require('../../assets/images/scanQR.png')} />
             </Pressable>
 
             <View style={styles.mapWrapper}>
@@ -116,7 +123,7 @@ const HomeScreen = () => {
                                 </Marker>
                             );
                         })}
-                    </MapView>
+                    </MapView> */}
                     <View style={styles.carouselContainer}>
                         <Carousel
                             loop
@@ -140,7 +147,7 @@ const HomeScreen = () => {
                             )}
                             onSnapToItem={onCarouselItemChange}
                         />
-                    </View> */}
+                    </View>
                 </View>
             </View>
 
@@ -150,12 +157,23 @@ const HomeScreen = () => {
 
 
 const styles = StyleSheet.create({
+    test: {
+        borderColor: 'black',
+        borderWidth: 0.5,
+        height: 120,
+        width: 120,
+        flex: 1
+    },
     container: {
         flex: 1
     },
     image: {
         alignSelf: "center",
         marginBottom: 16,
+    },
+    imageSize: {
+        width: 343,
+        height: 153
     },
     mapWrapper: {
         flex: 1,

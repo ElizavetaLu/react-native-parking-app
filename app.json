@@ -33,6 +33,13 @@
           {
             "locationAlwaysAndWhenInUsePermission": "Allow Parking to use your location."
           }
+          
+        ],
+        [
+          "expo-camera",
+          {
+            "cameraPermission": "Allow Parking to access your camera."
+          }
         ]
       ]
     }
