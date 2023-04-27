@@ -9,6 +9,7 @@ const StartScreen = ({ navigation }) => {
             <View style={styles.container}>
                 <Text style={styles.title}>pay for parking directly in the app</Text>
 
+
                 <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={() => navigation.navigate('Main')}>
                     <Text style={styles.buttonText}> Get Started</Text>
                     <Ionicons name="arrow-forward" size={24} color="white" />
@@ -23,14 +24,13 @@ StartScreen.navigationOptions = () => ({ tabBarVisible: false })
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "flex-end",
+        justifyContent:  "flex-end", 
         margin: 16,
         marginBottom: 42,
         gap: 39,
     },
     image: {
-        flex: 1,
-        justifyContent: 'center',
+        flex: 1
     },
     title: {
         color: "#333333",

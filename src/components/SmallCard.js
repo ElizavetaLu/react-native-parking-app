@@ -1,4 +1,6 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Image } from 'expo-image';
+
 
 const SmallCard = ({ blocked, cardNumber, expDate, action }) => {
 
@@ -7,8 +9,8 @@ const SmallCard = ({ blocked, cardNumber, expDate, action }) => {
     return (
         <View style={styles.container}>
             {blocked
-                ? <Image source={require("../../assets/images/icons/lock.png")} />
-                : <Image source={require("../../assets/images/icons/unlock.png")} />
+                ? <Image style={styles.lockIcon} source={require("../../assets/images/icons/lock.png")} />
+                : <Image style={styles.lockIcon} source={require("../../assets/images/icons/unlock.png")} />
             }
 
             <View style={styles.cardData}>
@@ -20,7 +22,7 @@ const SmallCard = ({ blocked, cardNumber, expDate, action }) => {
             </View>
 
             <View style={styles.deleteContainer}>
-                <Image source={require("../../assets/images/icons/mini-card.png")} />
+                <Image style={styles.cardIcon} source={require("../../assets/images/icons/mini-card.png")} />
 
                 <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={action}>
                     <Text style={styles.buttonText}>Delete</Text>
@@ -41,6 +43,14 @@ const styles = StyleSheet.create({
         paddingLeft: 16,
         backgroundColor: "#F8F8F8",
         borderRadius: 22,
+    },
+    lockIcon: {
+        width: 14,
+        height: 20
+    },
+    cardIcon: {
+        width: 37,
+        height: 25
     },
     cardData: {
         flex: 1,

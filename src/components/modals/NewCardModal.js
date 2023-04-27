@@ -1,10 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Text, StyleSheet } from "react-native";
+import uuid from 'react-native-uuid';
 import { useState } from "react";
+
 import CardDataInputs from "../CardDataInputs";
 import ModalContainer from "./ModalContainer";
+
 import { cardNumberFormat, expDateFormat } from '../../helpers';
-import uuid from 'react-native-uuid';
 import valid from "card-validator";
 
 
@@ -20,7 +22,7 @@ const NewCardModal = ({ setCards, modalVisible, setModalVisible }) => {
     const onAdd = async () => {
 
         if (!valid.cardholderName(cardholder).isValid) return setErrorMessage('invalid cardholder name');
-        if (!valid.number(cardNumber).isValid) return setErrorMessage('invalid card number');
+        // if (!valid.number(cardNumber).isValid) return setErrorMessage('invalid card number');
         if (!valid.expirationDate(expDate).isValid) return setErrorMessage('invalid expiration date');
         if (!valid.cvv(cvv).isValid) return setErrorMessage('invalid CVV');
 
@@ -81,14 +83,12 @@ const NewCardModal = ({ setCards, modalVisible, setModalVisible }) => {
             <Text style={styles.title}>Add New Card</Text>
             <Text style={styles.text}>Add new card and use it for your payments</Text>
             <Text style={styles.error}>{errorMessage}</Text>
-
             <CardDataInputs
                 cardholder={cardholder} setCardholder={(value) => setCardholder(value.toUpperCase())}
                 cardNumber={cardNumber} setCardNumber={value => cardNumberFormat(value, setCardNumber)}
                 expDate={expDate} setExpDate={value => expDateFormat(value, setExpDate)}
                 cvv={cvv} setCvv={setCvv}
             />
-
         </ModalContainer >
     )
 }

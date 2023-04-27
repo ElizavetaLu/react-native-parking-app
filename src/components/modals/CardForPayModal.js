@@ -1,12 +1,18 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { cardNumberFormat, expDateFormat } from "../../helpers";
-import { View, Text, Image, StyleSheet } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { View, Text, StyleSheet } from "react-native";
+import uuid from 'react-native-uuid';
+import { Image } from 'expo-image';
+import { useState } from "react";
+
 import CardDataInputs from "../CardDataInputs";
 import ModalContainer from "./ModalContainer";
-import uuid from 'react-native-uuid';
+
+import { cardNumberFormat, expDateFormat } from "../../helpers";
 import valid from "card-validator";
-import { useState } from "react";
+
+
+
 
 const CardForPayModal = ({ address, date, time, total, modalVisible, setModalVisible, setErrorModal }) => {
 
@@ -116,15 +122,13 @@ const CardForPayModal = ({ address, date, time, total, modalVisible, setModalVis
             secondary
         >
             <View style={styles.address}>
-                <Image source={require("../../../assets/images/icons/locationDark.png")} />
+                <Image style={styles.iconSize} source={require("../../../assets/images/icons/locationDark.png")} />
                 <Text style={styles.addressText}>{address}</Text>
             </View>
-
             <View style={styles.data}>
                 <Text style={styles.dataText}>{date}</Text>
                 <Text style={styles.dataText}>{time}</Text>
             </View>
-
             <Text style={styles.error}>{errorMessage}</Text>
             <CardDataInputs
                 cardholder={cardholder} setCardholder={value => setCardholder(value.toUpperCase())}
@@ -132,7 +136,6 @@ const CardForPayModal = ({ address, date, time, total, modalVisible, setModalVis
                 expDate={expDate} setExpDate={value => expDateFormat(value, setExpDate)}
                 cvv={cvv} setCvv={setCvv}
             />
-
             <BouncyCheckbox
                 size={13}
                 fillColor="#4FA4FB"
@@ -141,11 +144,9 @@ const CardForPayModal = ({ address, date, time, total, modalVisible, setModalVis
                 iconStyle={styles.iconStyle}
                 innerIconStyle={styles.innerIconStyle}
                 textStyle={styles.checkboxText}
-
                 isChecked={checked}
                 onPress={setChecked}
             />
-
             <View style={styles.total}>
                 <Text style={styles.totalText}>Total amount</Text>
                 <Text style={styles.totalAmount}>{total}$</Text>
@@ -156,6 +157,10 @@ const CardForPayModal = ({ address, date, time, total, modalVisible, setModalVis
 
 
 const styles = StyleSheet.create({
+    iconSize: {
+        width: 18,
+        height: 22
+    },
     address: {
         flexDirection: "row",
         gap: 10,

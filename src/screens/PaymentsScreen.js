@@ -1,10 +1,12 @@
-import { View, FlatList, Text, StyleSheet, Image, Dimensions } from "react-native";
+import { View, FlatList, Text, StyleSheet, Dimensions, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Carousel from 'react-native-reanimated-carousel';
 import { useCallback, useEffect, useState } from "react";
+import { Image } from 'expo-image';
 
 import RoundedContainer from "../components/RoundedContainer";
 import NewCardModal from "../components/modals/NewCardModal";
+import { useFocusEffect } from '@react-navigation/native';
 import PaymentInfo from "../components/PaymentInfo";
 import Button from "../components/buttons/Button";
 import DummyText from "../components/DummyText";
@@ -18,11 +20,10 @@ import SignUpCodeModal from "../components/modals/SignUpCodeModal";
 
 
 
-import { useFocusEffect } from '@react-navigation/native';
-
 const PaymentsScreen = () => {
 
     const [token, setToken] = useState(null);
+    
 
     useEffect(() => {
         AsyncStorage.getItem("token")
@@ -48,7 +49,6 @@ const PaymentsScreen = () => {
     }
 
     useEffect(() => {
-
         updateCards(setCards);
         updatePayments(setPayments);
     }, [])
@@ -79,7 +79,7 @@ const PaymentsScreen = () => {
                 {cards.length < 1
                     ? <View style={styles.dummyContainer}>
                         <DummyText text="You have no added cards" />
-                        <Image source={require("../../assets/images/creditCard.png")} />
+                        <Image style={styles.dummyCardImage} source={require("../../assets/images/creditCard.png")} />
                     </View>
 
                     : <View style={{ alignItems: cards.length === 1 ? "center" : "none" }}>
@@ -164,6 +164,10 @@ const styles = StyleSheet.create({
     dummyContainer: {
         alignItems: "center",
         gap: 20
+    },
+    dummyCardImage: {
+        width: 315,
+        height: 195.81
     },
     buttonContainer: {
         position: "absolute",

@@ -1,6 +1,8 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import ModalContainer from "./ModalContainer";
+import { Image } from 'expo-image';
 import { useState } from "react";
+
 
 const PaymentModal = ({ address, date, time, total, modalVisible, setModalVisible, showNextModal }) => {
 
@@ -31,7 +33,7 @@ const PaymentModal = ({ address, date, time, total, modalVisible, setModalVisibl
             secondary
         >
             <View style={styles.address}>
-                <Image source={require("../../../assets/images/icons/locationDark.png")} />
+                <Image style={styles.locationIcon} source={require("../../../assets/images/icons/locationDark.png")} />
                 <Text style={styles.addressText}>{address}</Text>
             </View>
 
@@ -45,12 +47,12 @@ const PaymentModal = ({ address, date, time, total, modalVisible, setModalVisibl
 
             <View style={styles.buttons}>
                 <TouchableOpacity activeOpacity={0.8} style={{ ...styles.button, backgroundColor: selectedTypeBg('apple') }} onPress={() => setPaymentType('apple')}>
-                    <Image source={require("../../../assets/images/icons/applePay.png")} />
+                    <Image style={styles.paymentIcon} source={require("../../../assets/images/icons/applePay.png")} />
                     <Text style={{ ...styles.buttonText, color: selectedTypeText('apple') }}>Pay</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity activeOpacity={0.8} style={{ ...styles.button, backgroundColor: selectedTypeBg('google') }} onPress={() => setPaymentType('google')}>
-                    <Image source={require("../../../assets/images/icons/googlePay.png")} />
+                    <Image style={styles.paymentIcon} source={require("../../../assets/images/icons/googlePay.png")} />
                     <Text style={{ ...styles.buttonText, color: selectedTypeText('google') }}>Pay</Text>
                 </TouchableOpacity>
 
@@ -73,6 +75,14 @@ const styles = StyleSheet.create({
         gap: 10,
         alignItems: "center",
     },
+    locationIcon: {
+        width: 18,
+        height: 22
+    },
+    paymentIcon: {
+        width: 22,
+        height: 22
+    },
     addressText: {
         fontSize: 14,
         fontWeight: 500,
@@ -91,11 +101,15 @@ const styles = StyleSheet.create({
     },
     qr: {
         marginTop: 16,
-        alignSelf: "center"
+        alignSelf: "center",
+        width: 185,
+        height: 185
     },
     barcode: {
         marginTop: 26.88,
-        alignSelf: "center"
+        alignSelf: "center",
+        width: 185,
+        height: 70
     },
     buttons: {
         flexDirection: "row",
