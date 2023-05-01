@@ -47,7 +47,7 @@ const ProfileScreen = ({ navigation }) => {
                         <Image style={styles.profileImageSize} source={require("../../assets/images/icons/avatar.png")} />
 
                         <Pressable style={styles.pencil} onPress={() => { }}>
-                            <Image style={styles.pencilImageSize} source={require("../../assets/images/icons/pencil.png")} />
+                            <Image style={styles.pencilImageSize} source={require("../../assets/images/icons/pencil.svg")} />
                         </Pressable>
                     </View>
                     <View style={styles.inputsContainer}>
@@ -60,10 +60,9 @@ const ProfileScreen = ({ navigation }) => {
 
                         <Header title="my cards" />
 
-
-                        {cards.length < 1 && <DummyText text="You have no added cards" />}
-
                         <FlatList
+                            ListFooterComponent={<View style={styles.listFooter}></View>}
+                            ListEmptyComponent={<DummyText text="You have no added cards" />}
                             style={styles.list}
                             data={cards}
                             keyExtractor={item => item.id}
@@ -129,7 +128,10 @@ const styles = StyleSheet.create({
         flex: 1
     },
     list: {
-        top: -21
+        top: -21 
+    },
+    listFooter: {
+        height: 100
     },
     separator: {
         height: 12

@@ -9,8 +9,8 @@ const SmallCard = ({ blocked, cardNumber, expDate, action }) => {
     return (
         <View style={styles.container}>
             {blocked
-                ? <Image style={styles.lockIcon} source={require("../../assets/images/icons/lock.png")} />
-                : <Image style={styles.lockIcon} source={require("../../assets/images/icons/unlock.png")} />
+                ? <Image style={styles.lockIcon} source={require("../../assets/images/icons/lockDark.svg")} />
+                : <Image style={styles.lockIcon} source={require("../../assets/images/icons/unlockDark.svg")} />
             }
 
             <View style={styles.cardData}>
@@ -22,7 +22,7 @@ const SmallCard = ({ blocked, cardNumber, expDate, action }) => {
             </View>
 
             <View style={styles.deleteContainer}>
-                <Image style={styles.cardIcon} source={require("../../assets/images/icons/mini-card.png")} />
+                <Image style={styles.cardIcon} source={require("../../assets/images/icons/mini-card.svg")} />
 
                 <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={action}>
                     <Text style={styles.buttonText}>Delete</Text>

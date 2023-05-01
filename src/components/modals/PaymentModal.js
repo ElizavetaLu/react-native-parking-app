@@ -33,7 +33,7 @@ const PaymentModal = ({ address, date, time, total, modalVisible, setModalVisibl
             secondary
         >
             <View style={styles.address}>
-                <Image style={styles.locationIcon} source={require("../../../assets/images/icons/locationDark.png")} />
+                <Image style={styles.locationIcon} source={require("../../../assets/images/icons/locationDark.svg")} />
                 <Text style={styles.addressText}>{address}</Text>
             </View>
 
@@ -46,18 +46,18 @@ const PaymentModal = ({ address, date, time, total, modalVisible, setModalVisibl
             <Image style={styles.barcode} source={require("../../../assets/images/barcode.png")} />
 
             <View style={styles.buttons}>
-                <TouchableOpacity activeOpacity={0.8} style={{ ...styles.button, backgroundColor: selectedTypeBg('apple') }} onPress={() => setPaymentType('apple')}>
+                <TouchableOpacity activeOpacity={0.8} style={[styles.button, { backgroundColor: selectedTypeBg('apple') }]} onPress={() => setPaymentType('apple')}>
                     <Image style={styles.paymentIcon} source={require("../../../assets/images/icons/applePay.png")} />
-                    <Text style={{ ...styles.buttonText, color: selectedTypeText('apple') }}>Pay</Text>
+                    <Text style={[styles.buttonText, { color: selectedTypeText('apple') }]}>Pay</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity activeOpacity={0.8} style={{ ...styles.button, backgroundColor: selectedTypeBg('google') }} onPress={() => setPaymentType('google')}>
+                <TouchableOpacity activeOpacity={0.8} style={[styles.button, { backgroundColor: selectedTypeBg('google') }]} onPress={() => setPaymentType('google')}>
                     <Image style={styles.paymentIcon} source={require("../../../assets/images/icons/googlePay.png")} />
-                    <Text style={{ ...styles.buttonText, color: selectedTypeText('google') }}>Pay</Text>
+                    <Text style={[styles.buttonText, { color: selectedTypeText('google') }]}>Pay</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity activeOpacity={0.8} style={{ ...styles.button, backgroundColor: selectedTypeBg('card') }} onPress={() => setPaymentType('card')}>
-                    <Text style={{ ...styles.buttonText, color: selectedTypeText('card') }}>Card</Text>
+                <TouchableOpacity activeOpacity={0.8} style={[styles.button, { backgroundColor: selectedTypeBg('card') }]} onPress={() => setPaymentType('card')}>
+                    <Text style={[styles.buttonText, { color: selectedTypeText('card') }]}>Card</Text>
                 </TouchableOpacity>
             </View>
 

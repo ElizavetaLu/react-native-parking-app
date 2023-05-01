@@ -17,13 +17,14 @@ import { updateCards, updatePayments } from "../helpers";
 
 import SignUpPhoneModal from "../components/modals/SignUpPhoneModal";
 import SignUpCodeModal from "../components/modals/SignUpCodeModal";
-
+import { useSharedValue } from "react-native-reanimated";
+import PaginationItem from "../components/PaginationItem";
 
 
 const PaymentsScreen = () => {
 
     const [token, setToken] = useState(null);
-    
+
 
     useEffect(() => {
         AsyncStorage.getItem("token")
@@ -43,9 +44,11 @@ const PaymentsScreen = () => {
     const [payments, setPayments] = useState([]);
 
     const [currentCard, setCurrentCard] = useState(null);
+    const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
     const onCarouselItemChange = (index) => {
         setCurrentCard(cards[index]);
+        setCurrentCardIndex(index);
     }
 
     useEffect(() => {
@@ -61,6 +64,10 @@ const PaymentsScreen = () => {
         }, [setCards, setPayments])
     );
 
+
+    // useSharedValue(currentCard);
+
+    const parallaxScrollingOffset = width < 410 ? width / 3 : 200
     return (
         <RoundedContainer>
 
@@ -82,57 +89,67 @@ const PaymentsScreen = () => {
                         <Image style={styles.dummyCardImage} source={require("../../assets/images/creditCard.png")} />
                     </View>
 
-                    : <View style={{ alignItems: cards.length === 1 ? "center" : "none" }}>
-                        <Carousel
-                            loop={false}
-                            mode="parallax"
-                            modeConfig={{
-                                parallaxScrollingScale: 0.95,
-                                parallaxScrollingOffset: 200,
-                            }}
+                    : <Carousel
+                        loop={false}
+                        mode="parallax"
+                        modeConfig={{
+                            parallaxScrollingScale: 0.95,
+                            parallaxScrollingOffset
+                        }}
+                        style={{ alignSelf: cards.length === 1 ? "center" : null }}
+                        height={300}
+                        width={cards.length === 1 ? 230 : width}
 
-                            height={300}
-                            width={cards.length === 1 ? 230 : width}
-
-                            data={cards}
-                            renderItem={({ item, index }) => (
-                                <Card
-                                    key={item.id}
-                                    blocked={item.blocked}
-                                    cardNumber={item.cardNumber}
-                                    expDate={item.expDate}
-                                />
-                            )}
-                            onSnapToItem={onCarouselItemChange}
-                        />
-                    </View>
+                        data={cards}
+                        renderItem={({ item }) => (
+                            <Card
+                                key={item.id}
+                                blocked={item.blocked}
+                                cardNumber={item.cardNumber}
+                                expDate={item.expDate}
+                            />
+                        )}
+                        onSnapToItem={onCarouselItemChange}
+                    />
                 }
 
+                < View
+                    style={styles.paginationContainer}
+                >
+                    {
+                        cards.map((item, index) => {
+                            return (
+                                <PaginationItem
+                                    currentIndex={currentCardIndex}
+                                    index={index}
+                                    key={index}
+                                    isRotate={false}
+                                />)
+                        })
+                    }
+                </ View>
 
                 <Text style={styles.title}>Payments</Text>
 
+                <FlatList
+                    ListFooterComponent={<View style={styles.listFooter}></View>}
+                    ListEmptyComponent={<DummyText text="Your payment history is empty" />}
 
-                {payments.length > 0
-                    ? <FlatList
-                        style={styles.payments}
-                        data={payments}
-                        keyExtractor={item => item.id}
-                        ItemSeparatorComponent={() => <View style={styles.verticalSeparator} />}
-                        renderItem={({ item }) => {
-                            return (
-                                <PaymentInfo
-                                    address={item.address}
-                                    date={item.date}
-                                    time={item.time}
-                                    total={item.total}
-                                />
-                            )
-                        }}
-                    />
-
-                    : <DummyText text="Your payment history is empty" />
-                }
-
+                    style={styles.payments}
+                    data={payments}
+                    keyExtractor={item => item.id}
+                    ItemSeparatorComponent={() => <View style={styles.verticalSeparator} />}
+                    renderItem={({ item }) => {
+                        return (
+                            <PaymentInfo
+                                address={item.address}
+                                date={item.date}
+                                time={item.time}
+                                total={item.total}
+                            />
+                        )
+                    }}
+                />
             </View>
             <View style={styles.buttonContainer}>
                 {token
@@ -161,6 +178,9 @@ const styles = StyleSheet.create({
     verticalSeparator: {
         height: 16
     },
+    listFooter: {
+        height: 100
+    },
     dummyContainer: {
         alignItems: "center",
         gap: 20
@@ -168,6 +188,12 @@ const styles = StyleSheet.create({
     dummyCardImage: {
         width: 315,
         height: 195.81
+    },
+    paginationContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: 100,
+        alignSelf: "center",
     },
     buttonContainer: {
         position: "absolute",

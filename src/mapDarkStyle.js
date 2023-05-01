@@ -1,4 +1,4 @@
-export default mapDarkStyle = [
+export default [
     {
         "elementType": "geometry",
         "stylers": [

@@ -2,31 +2,30 @@ import { StyleSheet, View, Text, ImageBackground } from "react-native";
 import { Image } from 'expo-image';
 
 
-
 const Card = ({ blocked, cardNumber, expDate }) => {
 
-    const hiddenCardNumber = "**** **** **** " + cardNumber?.slice(-4);
+    const hiddenCardNumber = '**** **** **** ' + cardNumber?.slice(-4);
 
-    return ( 
-            <ImageBackground style={styles.container} source={require('../../assets/images/backgrounds/cardDark.png')}>
+    return (
+        <ImageBackground style={styles.container} source={require('../../assets/images/backgrounds/cardDark.png')}>
 
-                <View style={styles.header}>
-                    <View></View>
-                    <Image style={styles.chipIcon} source={require("../../assets/images/icons/chip.png")} />
-                    {blocked
-                        ? <Image style={styles.lockIcon} source={require("../../assets/images/icons/lockLight.png")} />
-                        : <Image style={styles.lockIcon} source={require("../../assets/images/icons/unlock.png")} />
-                    }
+            <View style={styles.header}>
+                <View></View>
+                <Image style={styles.chipIcon} source={require('../../assets/images/icons/chip.svg')} />
+                {blocked
+                    ? <Image style={styles.lockIcon} source={require('../../assets/images/icons/lockLight.svg')} />
+                    : <Image style={styles.lockIcon} source={require('../../assets/images/icons/unlockLight.svg')} />
+                }
+            </View>
+            <Text style={styles.cardNumber}>{hiddenCardNumber}</Text>
+            <View style={styles.footer}>
+                <Image style={styles.cardTypeIcon} source={require('../../assets/images/icons/masterCard.svg')} />
+                <View>
+                    <Text style={styles.cardExp}>Exp. Date</Text>
+                    <Text style={styles.cardExpData}>{expDate}</Text>
                 </View>
-                <Text style={styles.cardNumber}>{hiddenCardNumber}</Text>
-                <View style={styles.footer}>
-                    <Image style={styles.cardTypeIcon} source={require("../../assets/images/icons/masterCard.png")} />
-                    <View>
-                        <Text style={styles.cardExp}>Exp. Date</Text>
-                        <Text style={styles.cardExpData}>{expDate}</Text>
-                    </View>
-                </View>
-            </ImageBackground> 
+            </View>
+        </ImageBackground>
     )
 }
 
