@@ -1,38 +1,31 @@
-import { Dimensions, StyleSheet, View, SafeAreaView, Pressable, Animated } from "react-native";
-import { Camera } from 'expo-camera';
-// import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import { Text, StyleSheet, View, SafeAreaView, Pressable } from "react-native";
 import { requestForegroundPermissionsAsync } from "expo-location";
-import Carousel from 'react-native-reanimated-carousel';
-import { useEffect, useState } from "react";
+import { Camera } from 'expo-camera';
 import { Image } from 'expo-image';
+
+import { useEffect, useState } from "react";
 
 import CardForPayModal from "../components/modals/CardForPayModal";
 import PaymentModal from "../components/modals/PaymentModal";
 import ErrorModal from "../components/modals/ErrorModal";
-import MapCard from "../components/MapCard";
 import Header from "../components/Header";
+import Map from "../components/Map";
 
-// import mapDarkStyle from "../mapDarkStyle";
-
-
-const coordinates = [
-    { latitude: 49.842957, longitude: 24.031111, address: "Lvivska Str. Parking Forum Lviv 1", distance: "400m from you" },
-    { latitude: 49.844858, longitude: 24.032312, address: "Lvivska Str. Parking Forum Lviv 2", distance: "500m from you" },
-    { latitude: 49.845759, longitude: 24.031413, address: "Lvivska Str. Parking Forum Lviv 3", distance: "600m from you" },
-    { latitude: 49.844650, longitude: 24.030014, address: "Lvivska Str. Parking Forum Lviv 4", distance: "700m from you" },
-]
+import coordinates from "../coordinatesDummy";
 
 
-const HomeScreen = ({ navigation }) => {
+
+const HomeScreen = () => {
 
     const [paymentModal, setPaymentModal] = useState(false);
     const [cardDataModal, setCardDataModal] = useState(false);
     const [errorModal, setErrorModal] = useState(false);
 
-    const width = Dimensions.get('window').width;
 
+    //map
     const [markers, setMarkers] = useState([]);
     const [map, setMap] = useState(null);
+
     const [activeIndex, setActiveIndex] = useState(0);
 
     const onCarouselItemChange = (index) => {
@@ -40,12 +33,13 @@ const HomeScreen = ({ navigation }) => {
         setActiveIndex(index);
         let location = coordinates[index];
 
-        map.animateToRegion({
+        map?.animateToRegion({
             latitude: location.latitude,
             longitude: location.longitude,
             latitudeDelta: 0.0049,
             longitudeDelta: 0.0019,
         });
+
 
         markers[index].showCallout();
     }
@@ -54,17 +48,33 @@ const HomeScreen = ({ navigation }) => {
     const askLocationPermission = async () => {
         const { granted } = await requestForegroundPermissionsAsync();
 
-        if (!granted) {
-            console.log("Location permission not granted");
-        }
+        if (!granted) console.log("Location permission not granted");
     }
 
-    const [permission, requestPermission] = Camera.useCameraPermissions();
-
     useEffect(() => {
-        requestPermission();
         askLocationPermission();
     }, [])
+
+
+    //camera
+    const [cameraView, setCameraView] = useState(false);
+    const [cameraPermission, setCameraPermission] = useState(null);
+
+    const cameraPermisionFunction = async () => {
+        const cameraPermission = await Camera.requestCameraPermissionsAsync();
+
+        setCameraPermission(cameraPermission.status === 'granted');
+
+
+        if (cameraPermission.status !== 'granted') console.log('Permission for media access needed.');
+    };
+
+    useEffect(() => {
+        cameraPermisionFunction();
+    }, []);
+
+
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -91,65 +101,33 @@ const HomeScreen = ({ navigation }) => {
 
             <ErrorModal modalVisible={errorModal} setModalVisible={setErrorModal} />
 
-            <Pressable style={styles.image} onPress={() => navigation.navigate('Camera')}>
-                <Image style={styles.imageSize} source={require('../../assets/images/scanQR.png')} />
-            </Pressable>
-
-            <View style={styles.mapWrapper}>
-                <View style={styles.mapContainer}>
-                    {/* <MapView
-                        style={styles.map}
-                        provider={PROVIDER_GOOGLE}
-                        customMapStyle={mapDarkStyle}
-                        ref={map => setMap(map)}
-                        initialRegion={{
-                            latitude: 49.842957,
-                            longitude: 24.031111,
-                            latitudeDelta: 0.0049,
-                            longitudeDelta: 0.0019,
-                        }}
-                    >
-                        {coordinates.map((marker, index) => {
-                            return (
-                                <Marker
-                                    key={index}
-                                    ref={ref => markers[index] = ref}
-                                    coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
-                                >
-                                    <Animated.Image
-                                        style={activeIndex === index && { width: 28.8, height: 34.45 }}
-                                        source={require('../../assets/images/icons/mapMarker.png')}
-                                    />
-                                </Marker>
-                            );
-                        })}
-                    </MapView> */}
-                    <View style={styles.carouselContainer}>
-                        <Carousel
-                            loop
-                            mode="parallax"
-                            modeConfig={{
-                                parallaxScrollingScale: 0.9,
-                                parallaxScrollingOffset: 100,
-                            }}
-
-                            height={88}
-                            width={width}
-
-                            data={coordinates}
-                            renderItem={({ item, index }) => (
-                                < MapCard
-                                    key={item.id}
-                                    active={index === activeIndex}
-                                    address={item.address}
-                                    distance={item.distance}
-                                />
-                            )}
-                            onSnapToItem={onCarouselItemChange}
-                        />
+            <View style={styles.scaner}>
+                {cameraView
+                    ? <View style={styles.cameraContainer}>
+                        <Camera
+                            style={styles.containerSize}
+                            zoom={0.4}
+                        >
+                            <Text></Text>
+                        </Camera>
                     </View>
-                </View>
+                    : <Pressable style={styles.scaner} onPress={() => setCameraView(!cameraView)}>
+                        <Image
+                            style={styles.containerSize}
+                            source={require('../../assets/images/scanQR.png')}
+                            onPress={() => setCameraView(!cameraView)}
+                        />
+                    </Pressable>
+                }
             </View>
+
+
+            <Map
+                markers={markers}
+                activeIndex={activeIndex}
+                onCarouselItemChange={onCarouselItemChange}
+                setMap={setMap}
+            />
 
         </SafeAreaView >
     )
@@ -157,42 +135,25 @@ const HomeScreen = ({ navigation }) => {
 
 
 const styles = StyleSheet.create({
-    test: {
-        borderColor: 'black',
-        borderWidth: 0.5,
-        height: 120,
-        width: 120,
-        flex: 1
-    },
     container: {
         flex: 1
     },
-    image: {
+    scaner: {
         alignSelf: "center",
         marginBottom: 16,
+        width: 343,
+        height: 153,
+        borderRadius: 22
     },
-    imageSize: {
+    cameraContainer: {
+        width: 343,
+        height: 153,
+        borderRadius: 22,
+        overflow: "hidden"
+    },
+    containerSize: {
         width: 343,
         height: 153
-    },
-    mapWrapper: {
-        flex: 1,
-        borderTopLeftRadius: 32,
-        borderTopRightRadius: 32,
-        backgroundColor: "#333333"
-    },
-    map: {
-        height: "100%",
-    },
-    mapContainer: {
-        borderRadius: 32,
-        overflow: "hidden",
-    },
-    carouselContainer: {
-        position: "absolute",
-        bottom: 30,
-        left: 0,
-        right: 0,
     }
 })
 

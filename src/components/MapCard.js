@@ -8,14 +8,20 @@ const MapCard = ({ active, address, distance }) => {
 
     return (
         <View style={styles.card}>
-            {active && <Image
-                style={styles.icon}
-                source={require("../../assets/images/icons/selected.png")}
-            />}
+            {active &&
+                <View style={styles.icon}>
+                    <Image
+                        style={styles.iconSize}
+                        source={require("../../assets/images/icons/selected.svg")}
+                    />
+                </View>
+            }
+
             <View style={styles.locationRow}>
-                <Image style={styles.locationIcon} source={require('../../assets/images/icons/location.png')} />
+                <Image style={styles.locationIcon} source={require('../../assets/images/icons/location.svg')} />
                 <Text style={styles.address}>{address}</Text>
             </View>
+            
             <Text style={styles.distance}>{distance}</Text>
         </View>
     )
@@ -32,7 +38,8 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         borderRadius: 28,
         height: 82,
-        width: width / 1.3
+        width: width / 1.3,
+        position: "relative"
     },
     locationRow: {
         flexDirection: "row",
@@ -43,6 +50,10 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: -6,
         right: -6,
+        width: 24,
+        height: 24
+    },
+    iconSize: {
         width: 24,
         height: 24
     },

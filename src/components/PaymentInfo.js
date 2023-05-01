@@ -3,11 +3,11 @@ import { Image } from 'expo-image';
 
 
 const PaymentInfo = ({ address, date, time, total }) => {
-    
+   
     return (
         <View style={styles.container}>
             <View style={styles.imageContainer}>
-                <Image style={styles.image} source={require("../../assets/images/icons/Union.png")} />
+                <Image style={styles.image} source={require("../../assets/images/icons/locationColor.svg")} />
             </View>
             <View style={styles.infoContainer}>
                 <Text style={styles.address}>{address}</Text>

@@ -122,7 +122,7 @@ const CardForPayModal = ({ address, date, time, total, modalVisible, setModalVis
             secondary
         >
             <View style={styles.address}>
-                <Image style={styles.iconSize} source={require("../../../assets/images/icons/locationDark.png")} />
+                <Image style={styles.iconSize} source={require("../../../assets/images/icons/locationDark.svg")} />
                 <Text style={styles.addressText}>{address}</Text>
             </View>
             <View style={styles.data}>

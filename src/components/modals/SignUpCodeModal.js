@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { View, Text, StyleSheet, TextInput, Platform } from "react-native";
 import { useRef, useState } from "react";
 
 import ModalContainer from "./ModalContainer";
@@ -53,7 +53,7 @@ const SignUpCodeModal = ({ modalVisible, setModalVisible, setToken }) => {
                 <TextInput
                     autoFocus
                     maxLength={1}
-                    style={{ ...styles.input, borderBottomColor: borderBottomColor(1) }}
+                    style={[styles.input, { borderBottomColor: borderBottomColor(1) }]}
 
                     value={input1Value}
                     onChangeText={val => {
@@ -65,7 +65,7 @@ const SignUpCodeModal = ({ modalVisible, setModalVisible, setToken }) => {
                 />
                 <TextInput
                     maxLength={1}
-                    style={{ ...styles.input, borderBottomColor: borderBottomColor(2) }}
+                    style={[styles.input, { borderBottomColor: borderBottomColor(2) }]}
                     ref={input2}
 
                     value={input2Value}
@@ -78,8 +78,9 @@ const SignUpCodeModal = ({ modalVisible, setModalVisible, setToken }) => {
                 />
                 <TextInput
                     maxLength={1}
-                    style={{ ...styles.input, borderBottomColor: borderBottomColor(3) }}
+                    style={[styles.input, { borderBottomColor: borderBottomColor(3) }]}
                     ref={input3}
+
 
                     value={input3Value}
                     onChangeText={val => {
@@ -91,7 +92,7 @@ const SignUpCodeModal = ({ modalVisible, setModalVisible, setToken }) => {
                 />
                 <TextInput
                     maxLength={1}
-                    style={{ ...styles.input, borderBottomColor: borderBottomColor(4) }}
+                    style={[styles.input, { borderBottomColor: borderBottomColor(4) }]}
                     ref={input4}
 
                     value={input4Value}
@@ -132,6 +133,7 @@ const styles = StyleSheet.create({
         marginBottom: 17
     },
     input: {
+        outlineStyle: "none",
         borderBottomWidth: 1,
         textAlign: "center",
         width: 40,

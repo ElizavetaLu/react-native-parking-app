@@ -1,4 +1,5 @@
-import { ImageBackground, View, StyleSheet, Text, Image } from "react-native";
+import { ImageBackground, View, StyleSheet, Text } from "react-native";
+import { Image } from 'expo-image';
 import { useState } from "react";
 
 import NewCardModal from "../components/modals/NewCardModal";
@@ -16,8 +17,10 @@ const PaymentsEmptyScreen = (setCards) => {
 
                     <NewCardModal setCards={setCards} modalVisible={modalVisible} setModalVisible={setModalVisible} />
 
-                    <Text style={styles.title}>You have no added cards</Text>
+                    <Text style={styles.title}>You have no added cards</Text> 
+
                     <Image style={styles.image} source={require("../../assets/images/creditCard.png")} />
+
                     <Button text="add card" onPress={() => setModalVisible(true)} primary />
                 </ImageBackground>
             </View>
@@ -51,6 +54,8 @@ const styles = StyleSheet.create({
         position: "absolute",
         right: -120,
         top: "60%",
+        width: 315,
+        height: 195.81
     },
     title: {
         maxWidth: 300,
