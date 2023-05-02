@@ -1,8 +1,8 @@
-import { StyleSheet, View } from "react-native";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import { StyleSheet, View } from "react-native";
 
 
-const PaginationItem = ({ currentIndex, index, isRotate }) => {
+const PaginationItem = ({ currentIndex, index }) => {
 
     const animStyle = useAnimatedStyle(() => {
 
@@ -16,7 +16,6 @@ const PaginationItem = ({ currentIndex, index, isRotate }) => {
         }
 
     }, [currentIndex, index]);
-
 
     return (
         <View style={styles.container} >
@@ -33,8 +32,7 @@ const styles = StyleSheet.create({
     },
     pagination: {
         borderRadius: 50,
-        backgroundColor: "rgba(51, 51, 51, .2)",
-        flex: 1,
+        flex: 1
     }
 })
 

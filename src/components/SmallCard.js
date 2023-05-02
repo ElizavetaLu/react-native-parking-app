@@ -22,7 +22,7 @@ const SmallCard = ({ blocked, cardNumber, expDate, action }) => {
             </View>
 
             <View style={styles.deleteContainer}>
-                <Image style={styles.cardIcon} source={require("../../assets/images/icons/mini-card.svg")} />
+                <Image style={styles.cardIcon} source={require("../../assets/images/icons/mini-card.png")} />
 
                 <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={action}>
                     <Text style={styles.buttonText}>Delete</Text>

@@ -1,12 +1,12 @@
-import { View, FlatList, Text, StyleSheet, Dimensions, Platform } from "react-native";
+import { View, FlatList, Text, StyleSheet, Dimensions } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Carousel from 'react-native-reanimated-carousel';
+import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useEffect, useState } from "react";
+import Carousel from 'react-native-reanimated-carousel';
 import { Image } from 'expo-image';
 
 import RoundedContainer from "../components/RoundedContainer";
 import NewCardModal from "../components/modals/NewCardModal";
-import { useFocusEffect } from '@react-navigation/native';
 import PaymentInfo from "../components/PaymentInfo";
 import Button from "../components/buttons/Button";
 import DummyText from "../components/DummyText";
@@ -17,14 +17,15 @@ import { updateCards, updatePayments } from "../helpers";
 
 import SignUpPhoneModal from "../components/modals/SignUpPhoneModal";
 import SignUpCodeModal from "../components/modals/SignUpCodeModal";
-import { useSharedValue } from "react-native-reanimated";
-import PaginationItem from "../components/PaginationItem";
+import PaginationItem from "../components/PaginationItem"; 
 
+
+const width = Dimensions.get('window').width;
+const parallaxScrollingOffset = width < 410 ? width / 3 : 200; 
 
 const PaymentsScreen = () => {
 
     const [token, setToken] = useState(null);
-
 
     useEffect(() => {
         AsyncStorage.getItem("token")
@@ -32,16 +33,15 @@ const PaymentsScreen = () => {
             .catch(err => console.log(err))
     }, [])
 
+
     const [phoneModal, setPhoneModal] = useState(false);
-    const [codeModal, setCodeModal] = useState(false);
+    const [codeModal, setCodeModal] = useState(false); 
+    const [addCardModal, setAddCardModal] = useState(false);
 
-
-    const width = Dimensions.get('window').width;
-
-    const [modalVisible, setModalVisible] = useState(false);
 
     const [cards, setCards] = useState([]);
     const [payments, setPayments] = useState([]);
+
 
     const [currentCard, setCurrentCard] = useState(null);
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -64,17 +64,13 @@ const PaymentsScreen = () => {
         }, [setCards, setPayments])
     );
 
-
-    // useSharedValue(currentCard);
-
-    const parallaxScrollingOffset = width < 410 ? width / 3 : 200
     return (
         <RoundedContainer>
 
             <NewCardModal
                 setCards={setCards}
-                modalVisible={modalVisible}
-                setModalVisible={setModalVisible}
+                modalVisible={addCardModal}
+                setModalVisible={setAddCardModal}
             />
 
             <SignUpPhoneModal modalVisible={phoneModal} setModalVisible={setPhoneModal} openNextModal={setCodeModal} />
@@ -113,17 +109,14 @@ const PaymentsScreen = () => {
                     />
                 }
 
-                < View
-                    style={styles.paginationContainer}
-                >
+                < View style={styles.paginationContainer}  >
                     {
                         cards.map((item, index) => {
                             return (
-                                <PaginationItem
+                                <PaginationItem 
                                     currentIndex={currentCardIndex}
                                     index={index}
-                                    key={index}
-                                    isRotate={false}
+                                    key={index} 
                                 />)
                         })
                     }
@@ -191,9 +184,10 @@ const styles = StyleSheet.create({
     },
     paginationContainer: {
         flexDirection: "row",
-        justifyContent: "space-between",
-        width: 100,
-        alignSelf: "center",
+        gap: 6,
+        justifyContent: "center",
+        width: "90%",
+        alignSelf: "center"
     },
     buttonContainer: {
         position: "absolute",

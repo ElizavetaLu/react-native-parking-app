@@ -1,4 +1,4 @@
-import { View, Animated, StyleSheet, Dimensions, Platform } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import MapView, { Marker } from "react-native-maps";
 
@@ -6,48 +6,50 @@ import MapCard from "./MapCard";
 
 import coordinates from "../coordinatesDummy";
 import mapDarkStyle from "../mapDarkStyle";
+import { Image } from 'expo-image';
 
 
 const width = Dimensions.get('window').width;
 
-const Map = ({ markers, activeIndex, onCarouselItemChange, setMap }) => {
+const Map = ({ markers, activeIndex, onCarouselItemChange, mapRef }) => {
+
+    const initialRegion = {
+        latitude: 49.842957,
+        longitude: 24.031111,
+        latitudeDelta: 0.0149,
+        longitudeDelta: 0.0119,
+    }
 
     return (
         <View style={styles.mapWrapper}>
             <View style={styles.mapContainer}>
                 <MapView
                     zoomControlEnabled={false}
-
                     style={styles.map}
                     provider={'google'}
                     customMapStyle={mapDarkStyle}
-                    ref={map => {
-                        if (Platform.OS === 'web') return () => setMap(map)
-                        setMap(map)
-                    }}
-                    initialRegion={{
-                        latitude: 49.842957,
-                        longitude: 24.031111,
-                        latitudeDelta: 0.0149,
-                        longitudeDelta: 0.0119,
-                    }}
+                    ref={mapRef}
+                    initialRegion={initialRegion}
                 >
                     {coordinates.map((marker, index) => {
+                        const markerSize = activeIndex === index
+                            ? { width: 28.8, height: 34.45 }
+                            : { width: 24, height: 28.4 }
+
                         return (
                             <Marker
                                 key={index}
                                 ref={ref => markers[index] = ref}
                                 coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
                             >
-                                <Animated.Image
-                                    style={activeIndex === index && marker}
+                                <Image
+                                    style={markerSize}
                                     source={require('../../assets/images/icons/mapMarker.svg')}
                                 />
                             </Marker>
                         );
                     })}
                 </MapView>
-
 
                 <View style={styles.carouselContainer}>
                     <Carousel
@@ -73,14 +75,10 @@ const Map = ({ markers, activeIndex, onCarouselItemChange, setMap }) => {
                         onSnapToItem={onCarouselItemChange}
                     />
                 </View>
-
-
             </View>
         </View>
     )
 }
-
-
 
 const styles = StyleSheet.create({
     mapWrapper: {
@@ -104,9 +102,9 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
     },
-    marker:{ 
-        width: 28.8, 
-        height: 34.45 
+    marker: {
+        width: 28.8,
+        height: 34.45
     }
 })
 
