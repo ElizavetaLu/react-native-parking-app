@@ -125,17 +125,21 @@ const CardForPayModal = ({ address, date, time, total, modalVisible, setModalVis
                 <Image style={styles.iconSize} source={require("../../../assets/images/icons/locationDark.svg")} />
                 <Text style={styles.addressText}>{address}</Text>
             </View>
+
             <View style={styles.data}>
                 <Text style={styles.dataText}>{date}</Text>
                 <Text style={styles.dataText}>{time}</Text>
             </View>
+
             <Text style={styles.error}>{errorMessage}</Text>
+
             <CardDataInputs
                 cardholder={cardholder} setCardholder={value => setCardholder(value.toUpperCase())}
                 cardNumber={cardNumber} setCardNumber={value => cardNumberFormat(value, setCardNumber)}
                 expDate={expDate} setExpDate={value => expDateFormat(value, setExpDate)}
                 cvv={cvv} setCvv={setCvv}
             />
+            
             <BouncyCheckbox
                 size={13}
                 fillColor="#4FA4FB"

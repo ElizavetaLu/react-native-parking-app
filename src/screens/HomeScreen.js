@@ -3,7 +3,7 @@ import { requestForegroundPermissionsAsync } from "expo-location";
 import { Camera } from 'expo-camera';
 import { Image } from 'expo-image';
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import CardForPayModal from "../components/modals/CardForPayModal";
 import PaymentModal from "../components/modals/PaymentModal";
@@ -24,7 +24,7 @@ const HomeScreen = () => {
 
     //map
     const [markers, setMarkers] = useState([]);
-    const [map, setMap] = useState(null);
+    const mapRef = useRef(null);
 
     const [activeIndex, setActiveIndex] = useState(0);
 
@@ -33,13 +33,14 @@ const HomeScreen = () => {
         setActiveIndex(index);
         let location = coordinates[index];
 
-        map?.animateToRegion({
-            latitude: location.latitude,
-            longitude: location.longitude,
-            latitudeDelta: 0.0049,
-            longitudeDelta: 0.0019,
-        });
-
+        if (mapRef && mapRef.current) {
+            mapRef.current.animateToRegion({
+                latitude: location.latitude,
+                longitude: location.longitude,
+                latitudeDelta: 0.0049,
+                longitudeDelta: 0.0019,
+            });
+        }
 
         markers[index].showCallout();
     }
@@ -62,17 +63,21 @@ const HomeScreen = () => {
 
     const cameraPermisionFunction = async () => {
         const cameraPermission = await Camera.requestCameraPermissionsAsync();
-
-        setCameraPermission(cameraPermission.status === 'granted');
-
-
-        if (cameraPermission.status !== 'granted') console.log('Permission for media access needed.');
+        setCameraPermission(cameraPermission.granted);
     };
 
     useEffect(() => {
         cameraPermisionFunction();
     }, []);
 
+    const onScanerPress = async () => {
+
+        if (!cameraPermission) {
+            const cameraPermission = await Camera.requestCameraPermissionsAsync();
+            return setCameraPermission(cameraPermission.granted);
+        }
+        setCameraView(!cameraView);
+    }
 
 
 
@@ -111,12 +116,14 @@ const HomeScreen = () => {
                             <Text></Text>
                         </Camera>
                     </View>
-                    : <Pressable style={styles.scaner} onPress={() => setCameraView(!cameraView)}>
+                    : <Pressable style={styles.scaner} onPress={onScanerPress}>
                         <Image
                             style={styles.containerSize}
                             source={require('../../assets/images/scanQR.png')}
-                            onPress={() => setCameraView(!cameraView)}
                         />
+                        <View style={styles.dummy}>
+                            <Text style={styles.dummyText}>tap to scan code</Text>
+                        </View>
                     </Pressable>
                 }
             </View>
@@ -126,7 +133,7 @@ const HomeScreen = () => {
                 markers={markers}
                 activeIndex={activeIndex}
                 onCarouselItemChange={onCarouselItemChange}
-                setMap={setMap}
+                mapRef={mapRef}
             />
 
         </SafeAreaView >
@@ -144,6 +151,23 @@ const styles = StyleSheet.create({
         width: 343,
         height: 153,
         borderRadius: 22
+    },
+    dummy: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: 343,
+        height: 153,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(52,52,52, .6)",
+        borderRadius: 33
+    },
+    dummyText: {
+        color: "white",
+        textTransform: "capitalize",
+        fontSize: 18,
+        fontWeight: "500"
     },
     cameraContainer: {
         width: 343,
